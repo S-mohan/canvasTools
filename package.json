@@ -1,0 +1,27 @@
+{
+  "name": "captures-tools",
+  "version": "1.0.0",
+  "description": "Screenshot tool based on canvas Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/S-mohan/captures-tools.git"
+  },
+  "keywords": [
+    "canvas",
+    "screenshot",
+    "captures",
+    "tools",
+    "tools",
+    "javascript"
+  ],
+  "author": "smohan <https://smohan.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/S-mohan/captures-tools/issues"
+  },
+  "homepage": "https://github.com/S-mohan/captures-tools#readme"
+}
