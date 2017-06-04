@@ -131,8 +131,6 @@ const getFontPanel = (fontSize = 12) => {
 	return html
 }
 
-
-
 export default {
 	getButtons,
 	getColorPanel,
