@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/S-mohan/canvasTools",
   "devDependencies": {
-    "autoprefixer": "^7.1.1",
+   "autoprefixer": "^7.1.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",

@@ -87,7 +87,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: ModuleBuildError: Module build failed: Error: ENOENT: no such file or directory, open 'E:\\github\\canvas-tools\\node_modules\\.0.28.4@css-loader\\lib\\css-base.js'\n    at runLoaders (E:\\github\\canvas-tools\\node_modules\\.2.6.1@webpack\\lib\\NormalModule.js:192:19)\n    at E:\\github\\canvas-tools\\node_modules\\.2.3.0@loader-runner\\lib\\LoaderRunner.js:364:11\n    at E:\\github\\canvas-tools\\node_modules\\.2.3.0@loader-runner\\lib\\LoaderRunner.js:200:19\n    at E:\\github\\canvas-tools\\node_modules\\.3.1.0@enhanced-resolve\\lib\\CachedInputFileSystem.js:62:14\n    at _combinedTickCallback (internal/process/next_tick.js:95:7)\n    at process._tickCallback (internal/process/next_tick.js:161:9)");
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 1 */
@@ -497,15 +497,18 @@ var classList = function classList(elements) {
 	});
 };
 
-exports.$ = $;
-exports.each = each;
-exports.bind = bind;
-exports.extend = extend;
-exports.unbind = unbind;
-exports.getComputedStyles = getComputedStyles;
-exports.classList = classList;
-exports.$on = $on;
-exports.$off = $off;
+exports.default = {
+	$: $,
+	each: each,
+	bind: bind,
+	extend: extend,
+	unbind: unbind,
+	getComputedStyles: getComputedStyles,
+	classList: classList,
+	$on: $on,
+	$off: $off
+};
+module.exports = exports['default'];
 
 /***/ }),
 /* 4 */
@@ -526,13 +529,13 @@ __webpack_require__(1);
 
 var _utils = __webpack_require__(3);
 
-var utils = _interopRequireWildcard(_utils);
+var _utils2 = _interopRequireDefault(_utils);
 
 var _template = __webpack_require__(2);
 
-var Template = _interopRequireWildcard(_template);
+var _template2 = _interopRequireDefault(_template);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -567,7 +570,7 @@ var buildStrokePanel = function buildStrokePanel() {
 
 	var el = document.createElement('div');
 	el.className = 'canvas-tools__panel js-panel__stroke';
-	el.innerHTML = Template.getStrokePanel(stroke) + Template.getColorPanel(color);
+	el.innerHTML = _template2.default.getStrokePanel(stroke) + _template2.default.getColorPanel(color);
 	return el;
 };
 
@@ -583,7 +586,7 @@ var buildFontPanel = function buildFontPanel() {
 
 	var el = document.createElement('div');
 	el.className = 'canvas-tools__panel js-panel__font';
-	el.innerHTML = Template.getFontPanel(fontSize) + Template.getColorPanel(color);
+	el.innerHTML = _template2.default.getFontPanel(fontSize) + _template2.default.getColorPanel(color);
 	return el;
 };
 
@@ -728,14 +731,14 @@ var defaults = {
 	    history = this.history;
 
 
-	var $btns = utils.$('.js-btn', $el),
-	    $fontPanel = utils.$('.js-panel__font', $el)[0],
-	    $strokePanel = utils.$('.js-panel__stroke', $el)[0],
-	    $colorSelected = utils.$('.js-color-selected', $el),
-	    $colors = utils.$('.js-color', $el),
-	    $strokeWidth = utils.$('.js-stroke-width', $el),
-	    $fontSize = utils.$('.js-font-size', $el),
-	    $saveLink = utils.$('.js-canvas-save', $el)[0];
+	var $btns = _utils2.default.$('.js-btn', $el),
+	    $fontPanel = _utils2.default.$('.js-panel__font', $el)[0],
+	    $strokePanel = _utils2.default.$('.js-panel__stroke', $el)[0],
+	    $colorSelected = _utils2.default.$('.js-color-selected', $el),
+	    $colors = _utils2.default.$('.js-color', $el),
+	    $strokeWidth = _utils2.default.$('.js-stroke-width', $el),
+	    $fontSize = _utils2.default.$('.js-font-size', $el),
+	    $saveLink = _utils2.default.$('.js-canvas-save', $el)[0];
 
 	//按钮事件
 	_handles.btnEmit = function (event) {
@@ -747,16 +750,16 @@ var defaults = {
 		}
 		var panel = this.getAttribute('data-panel');
 		var value = this.getAttribute('data-value');
-		utils.each($btns, function (index, $btn) {
+		_utils2.default.each($btns, function (index, $btn) {
 			if ($btn !== _this) {
-				utils.classList($btn, 'remove', 'active');
+				_utils2.default.classList($btn, 'remove', 'active');
 			}
 		});
 		if (!!~STROKE_TYPES.indexOf(value)) {
 			state.drawType = value;
 		}
 		if (panel) {
-			utils.classList(this, 'toggle', 'active');
+			_utils2.default.classList(this, 'toggle', 'active');
 			var isActive = /active/.test(this.className);
 			var visible = isActive ? 'block' : 'none';
 			if (panel === 'stroke') {
@@ -788,7 +791,7 @@ var defaults = {
 	_handles.toggleColor = function (event) {
 		var color = this.getAttribute('data-value');
 		state.strokeColor = color;
-		utils.each($colorSelected, function (index, item) {
+		_utils2.default.each($colorSelected, function (index, item) {
 			return item.style.background = color;
 		});
 	};
@@ -796,10 +799,10 @@ var defaults = {
 	//切换画笔大小
 	_handles.toggleStrokeWidth = function (event) {
 		state.strokeWidth = Number(this.getAttribute('data-value'));
-		utils.each($strokeWidth, function (index, item) {
+		_utils2.default.each($strokeWidth, function (index, item) {
 			var value = Number(item.getAttribute('data-value'));
 			var method = value === state.strokeWidth ? 'add' : 'remove';
-			utils.classList(item, method, 'active');
+			_utils2.default.classList(item, method, 'active');
 		});
 	};
 
@@ -841,8 +844,8 @@ var defaults = {
 				break;
 		}
 
-		utils.$on(document, 'mousemove', _handles.onMouseMove);
-		utils.$on(document, 'mouseup', _handles.onMouseUp);
+		_utils2.default.$on(document, 'mousemove', _handles.onMouseMove);
+		_utils2.default.$on(document, 'mouseup', _handles.onMouseUp);
 	};
 
 	//鼠标移动
@@ -867,8 +870,8 @@ var defaults = {
 
 	//鼠标离开
 	_handles.onMouseUp = function (event) {
-		utils.$off(document, 'mousemove', _handles.onMouseMove);
-		utils.$off(document, 'mouseup', _handles.onMouseUp);
+		_utils2.default.$off(document, 'mousemove', _handles.onMouseMove);
+		_utils2.default.$off(document, 'mouseup', _handles.onMouseUp);
 		if (!!~STROKE_TYPES.indexOf(state.drawType) && state.drawType !== 'font') {
 			__pushHistory.call(self);
 		}
@@ -909,28 +912,28 @@ var defaults = {
 	};
 
 	//按钮事件
-	utils.$on($btns, 'click', _handles.btnEmit
+	_utils2.default.$on($btns, 'click', _handles.btnEmit
 
 	//切换颜色
-	);utils.$on($colors, 'click', _handles.toggleColor
+	);_utils2.default.$on($colors, 'click', _handles.toggleColor
 
 	//切换画笔大小
-	);utils.$on($strokeWidth, 'click', _handles.toggleStrokeWidth
+	);_utils2.default.$on($strokeWidth, 'click', _handles.toggleStrokeWidth
 
 	//切换字体大小
-	);utils.$on($fontSize, 'change', _handles.toggleFontSize
+	);_utils2.default.$on($fontSize, 'change', _handles.toggleFontSize
 
 	//矩形，椭圆，画笔等绘制
-	);utils.$on(canvas, 'mousedown', _handles.onMouseDown
+	);_utils2.default.$on(canvas, 'mousedown', _handles.onMouseDown
 
 	//文字输入
-	);utils.$on(canvas, 'click', _handles.insertTextHelper
+	);_utils2.default.$on(canvas, 'click', _handles.insertTextHelper
 
 	//移除文字输入框
-	);utils.$on(document, 'click', _handles.removeTextHelper
+	);_utils2.default.$on(document, 'click', _handles.removeTextHelper
 
 	//下载
-	);utils.$on($saveLink, 'click', _handles.download);
+	);_utils2.default.$on($saveLink, 'click', _handles.download);
 }
 
 /**
@@ -1025,7 +1028,7 @@ function __drawFont(event) {
 		return;
 	}
 
-	var style = utils.getComputedStyles($textHelper),
+	var style = _utils2.default.getComputedStyles($textHelper),
 	    threshold = this.state.fontSize || TEXT_HELPER_FONT_SIZE,
 	    padding = 2 * TEXT_HELPER_PADDING,
 	    context = this.context;
@@ -1106,7 +1109,7 @@ var CanvasTools = function () {
 		}
 		this.canvas = canvas;
 		this.context = canvas.getContext('2d');
-		this.config = utils.extend({}, defaults, options || {});
+		this.config = _utils2.default.extend({}, defaults, options || {});
 
 		this.history = [];
 		this.state = Object.create(null);
@@ -1141,7 +1144,7 @@ var CanvasTools = function () {
 			var S = this.state;
 			var el = document.createElement('div');
 			el.className = 'canvas-tools';
-			el.innerHTML = Template.getButtons(C.buttons);
+			el.innerHTML = _template2.default.getButtons(C.buttons);
 			C.container.appendChild(el);
 
 			this.$el = el;
@@ -1157,21 +1160,21 @@ var CanvasTools = function () {
 			    _handles = this._handles;
 
 
-			var $btns = utils.$('.js-btn', $el),
-			    $colors = utils.$('.js-color', $el),
-			    $strokeWidth = utils.$('.js-stroke-width', $el),
-			    $fontSize = utils.$('.js-font-size', $el),
-			    $saveLink = utils.$('.js-canvas-save', $el)[0],
+			var $btns = _utils2.default.$('.js-btn', $el),
+			    $colors = _utils2.default.$('.js-color', $el),
+			    $strokeWidth = _utils2.default.$('.js-stroke-width', $el),
+			    $fontSize = _utils2.default.$('.js-font-size', $el),
+			    $saveLink = _utils2.default.$('.js-canvas-save', $el)[0],
 			    $textHelper = document.getElementById('canvas-tools-input');
 
-			utils.$off($btns, 'click', _handles.btnEmit);
-			utils.$off($colors, 'click', _handles.toggleColor);
-			utils.$off($strokeWidth, 'click', _handles.toggleStrokeWidth);
-			utils.$off($fontSize, 'change', _handles.toggleFontSize);
-			utils.$off(canvas, 'mousedown', _handles.onMouseDown);
-			utils.$off(canvas, 'click', _handles.insertTextHelper);
-			utils.$off(document, 'click', _handles.removeTextHelper);
-			utils.$off($saveLink, 'click', _handles.download);
+			_utils2.default.$off($btns, 'click', _handles.btnEmit);
+			_utils2.default.$off($colors, 'click', _handles.toggleColor);
+			_utils2.default.$off($strokeWidth, 'click', _handles.toggleStrokeWidth);
+			_utils2.default.$off($fontSize, 'change', _handles.toggleFontSize);
+			_utils2.default.$off(canvas, 'mousedown', _handles.onMouseDown);
+			_utils2.default.$off(canvas, 'click', _handles.insertTextHelper);
+			_utils2.default.$off(document, 'click', _handles.removeTextHelper);
+			_utils2.default.$off($saveLink, 'click', _handles.download);
 			$textHelper && $textHelper.parentNoed.removeChild($textHelper);
 			this.canvas = null;
 			this.context = null;

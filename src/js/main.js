@@ -1,7 +1,7 @@
 import '../scss/canvastools.scss'
 import './closet'
-import * as utils from './utils'
-import * as Template from './template'
+import utils from './utils'
+import Template from './template'
 
 //stroke类型操作
 const STROKE_TYPES = ['rect', 'ellipse', 'brush', 'arrow', 'mosaic', 'font', 'rubber']
