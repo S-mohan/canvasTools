@@ -1,14 +1,16 @@
 {
-  "name": "captures-tools",
+  "name": "CanvasTools",
   "version": "1.0.0",
-  "description": "Screenshot tool based on canvas Edit",
+  "description": "Screenshot tool based on canvas",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --env build",
+    "dev": "rm -rf ./dist && webpack --progress --colors --watch --env dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/S-mohan/captures-tools.git"
+    "url": "git+https://github.com/S-mohan/canvasTools.git"
   },
   "keywords": [
     "canvas",
@@ -21,7 +23,24 @@
   "author": "smohan <https://smohan.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/S-mohan/captures-tools/issues"
+    "url": "https://github.com/S-mohan/canvasTools/issues"
   },
-  "homepage": "https://github.com/S-mohan/captures-tools#readme"
+  "homepage": "https://github.com/S-mohan/canvasTools",
+  "devDependencies": {
+    "autoprefixer": "^7.1.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "extract-loader": "^0.1.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "node-sass": "^4.5.3",
+    "optimize-css-assets-webpack-plugin": "^1.3.2",
+    "postcss-loader": "^2.0.5",
+    "sass-loader": "^6.0.5",
+    "style-loader": "^0.18.1",
+    "webpack": "^2.6.1"
+  }
 }

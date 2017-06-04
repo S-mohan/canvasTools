@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link rel="stylesheet" href="../dist/canvastools.min.css">
+	<style type="text/css">
+		.canvas {
+			width: 800px;
+			margin: 100px auto;
+		}
+		.canvas canvas {
+			display: block;
+			margin: 0 auto 1rem auto;
+			border : 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+
+
+<div class="canvas">
+	<canvas id="myCanvas" width="800" height="500"></canvas>
+	<div id="canvasTools"></div>
+</div>
+
+
+
+
+
+<script src="../dist/canvastools.min.js"></script>
+<script>
+	var capTools = new CanvasTools(document.getElementById('myCanvas'), {
+		container : document.getElementById('canvasTools')
+	})
+	console.log(capTools)
+</script>
+</body>
+</html>
