@@ -780,6 +780,8 @@ var defaults = {
 				context.putImageData(history[history.length - 1], 0, 0, 0, 0, rect.width, rect.height);
 			}
 		}
+
+		__toggleCanvasCursor.call(self);
 	};
 
 	//切换颜色
@@ -1061,17 +1063,26 @@ function __drawFont(event) {
 	__pushHistory.call(this);
 }
 
+/**
+ * 切换鼠标指针
+ * @return 
+ */
 function __toggleCanvasCursor() {
 	var canvas = this.canvas;
 	var cursor = void 0;
-	switch (this.drawType) {
-		case 'line':
-			cursor = 'pencil';
+	switch (this.state.drawType) {
+		case 'brush':
+			cursor = 'brush';
+			break;
+		case 'font':
+			cursor = 'font';
 			break;
 		case 'rect':
 		case 'ellipse':
 			cursor = 'crosshair';
 			break;
+		default:
+			cursor = 'default';
 	}
 	if (cursor) {
 		canvas.className = canvas.className.replace(/canvas-cursor__(\w+)/, '').trim() + (' canvas-cursor__' + cursor);
@@ -1116,11 +1127,11 @@ var CanvasTools = function () {
 		this.state.lastImageData = this.context.getImageData(0, 0, this.rect.width, this.rect.height
 
 		//将画布的初始状态保存到历史记录
-		);__pushHistory.call(this
+		);__pushHistory.call(this);
 
-		//__toggleCanvasCursor.call(this)
+		__toggleCanvasCursor.call(this);
 
-		);this.render();
+		this.render();
 	}
 
 	_createClass(CanvasTools, [{

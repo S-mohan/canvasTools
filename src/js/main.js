@@ -249,6 +249,7 @@ function __bindEvents() {
 			}
 		}
 
+		__toggleCanvasCursor.call(self)
 	}
 
 	//切换颜色
@@ -534,18 +535,26 @@ function __drawFont(event) {
 }
 
 
-
+/**
+ * 切换鼠标指针
+ * @return 
+ */
 function __toggleCanvasCursor() {
 	const canvas = this.canvas
 	let cursor
-	switch (this.drawType) {
-		case 'line':
-			cursor = 'pencil'
+	switch (this.state.drawType) {
+		case 'brush':
+			cursor = 'brush'
+			break
+		case 'font':
+			cursor = 'font'
 			break
 		case 'rect':
 		case 'ellipse':
 			cursor = 'crosshair'
 			break
+		default:
+			cursor = 'default'
 	}
 	if (cursor) {
 		canvas.className = canvas.className.replace(/canvas-cursor__(\w+)/, '').trim() + ` canvas-cursor__${cursor}`
@@ -592,7 +601,7 @@ class CanvasTools {
 		//将画布的初始状态保存到历史记录
 		__pushHistory.call(this)
 
-		//__toggleCanvasCursor.call(this)
+		__toggleCanvasCursor.call(this)
 
 		this.render()
 	}
