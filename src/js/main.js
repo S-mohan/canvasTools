@@ -188,27 +188,32 @@ const $saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
 //是否支持原生下载
 const canUseSaveLink = 'download' in $saveLink
 
-//出发click事件
-const _click = element => element.dispatchEvent(new MouseEvent("click"))
 
 //下载文件
-const __downloadFile = function () {
+const __downloadFile = function() {
 	const fileName = `canvas_${Date.now()}.png`
 	const canvas = this.canvas
 	let fileUrl
+
 	if (canUseSaveLink) {
 		fileUrl = canvas.toDataURL('png')
 		fileUrl = fileUrl.replace('image/png', 'image/octet-stream')
 		setTimeout(() => {
 			$saveLink.href = fileUrl
 			$saveLink.download = fileName
-			_click($saveLink)
+
+			//触发click事件
+			$saveLink.dispatchEvent(new MouseEvent('click'))
 		})
 	}
+
 	//for ie10+ 
 	else if (typeof navigator !== "undefined" && typeof canvas.msToBlob === 'function' && navigator.msSaveBlob) {
 		navigator.msSaveBlob(canvas.msToBlob(), fileName)
-	} else {
+	}
+
+	// other 
+	else {
 		console.log('您的浏览器不支持该操作')
 	}
 }
@@ -400,7 +405,7 @@ function __bindEvents() {
 		}
 	}
 
-	
+
 	//按钮事件
 	utils.$on($btns, 'click', _handles.btnEmit)
 

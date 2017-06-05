@@ -682,31 +682,33 @@ var defaults = {
 //是否支持原生下载
 );var canUseSaveLink = 'download' in $saveLink;
 
-//出发click事件
-var _click = function _click(element) {
-	return element.dispatchEvent(new MouseEvent("click")
-
-	//下载文件
-	);
-};var __downloadFile = function __downloadFile() {
+//下载文件
+var __downloadFile = function __downloadFile() {
 	var fileName = 'canvas_' + Date.now() + '.png';
 	var canvas = this.canvas;
 	var fileUrl = void 0;
+
 	if (canUseSaveLink) {
 		fileUrl = canvas.toDataURL('png');
 		fileUrl = fileUrl.replace('image/png', 'image/octet-stream');
 		setTimeout(function () {
 			$saveLink.href = fileUrl;
 			$saveLink.download = fileName;
-			_click($saveLink);
+
+			//触发click事件
+			$saveLink.dispatchEvent(new MouseEvent('click'));
 		});
 	}
+
 	//for ie10+ 
 	else if (typeof navigator !== "undefined" && typeof canvas.msToBlob === 'function' && navigator.msSaveBlob) {
 			navigator.msSaveBlob(canvas.msToBlob(), fileName);
-		} else {
-			console.log('您的浏览器不支持该操作');
 		}
+
+		// other 
+		else {
+				console.log('您的浏览器不支持该操作');
+			}
 };
 
 //相关事件绑定
