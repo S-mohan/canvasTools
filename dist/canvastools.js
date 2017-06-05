@@ -85,6 +85,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -106,7 +112,7 @@ if (window.Element && !Element.prototype.closest) {
 }
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -259,7 +265,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -463,12 +469,6 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -481,15 +481,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-__webpack_require__(3);
-
 __webpack_require__(0);
 
-var _utils = __webpack_require__(2);
+__webpack_require__(1);
+
+var _utils = __webpack_require__(3);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _template = __webpack_require__(1);
+var _template = __webpack_require__(2);
 
 var _template2 = _interopRequireDefault(_template);
 
@@ -770,20 +770,16 @@ function __bindEvents() {
 			return;
 		}
 
-		if (value === 'undo') {
-
-			//history[0]是画布的初始状态
-			//因此只有多于1个历史记录时才可以恢复上一步
-			if (history.length > 1) {
-				history.pop();
-				context.putImageData(history[history.length - 1], 0, 0, 0, 0, rect.width, rect.height);
-			}
+		//history[0]是画布的初始状态
+		//因此只有多于1个历史记录时才可以恢复上一步
+		if (value === 'undo' && history.length > 1) {
+			history.pop();
+			context.putImageData(history[history.length - 1], 0, 0, 0, 0, rect.width, rect.height);
 		}
 
 		__toggleCanvasCursor.call(self);
 	};
 
-	//切换颜色
 	_handles.toggleColor = function (event) {
 		var color = this.getAttribute('data-value');
 		state.strokeColor = color;
@@ -792,7 +788,6 @@ function __bindEvents() {
 		});
 	};
 
-	//切换画笔大小
 	_handles.toggleStrokeWidth = function (event) {
 		state.strokeWidth = Number(this.getAttribute('data-value'));
 		_utils2.default.each($strokeWidth, function (index, item) {
@@ -802,7 +797,6 @@ function __bindEvents() {
 		});
 	};
 
-	//切换fontSize
 	_handles.toggleFontSize = function (event) {
 		state.fontSize = Number(this.value);
 	};
@@ -810,7 +804,6 @@ function __bindEvents() {
 	//鼠标在画布上的初始位置
 	var _startPos = void 0;
 
-	//鼠标点击
 	_handles.onMouseDown = function (event) {
 		if (!!~STROKE_TYPES.indexOf(state.drawType) === false || state.drawType === 'font') {
 			return;
@@ -826,7 +819,6 @@ function __bindEvents() {
 		context.shadowBlur = 0;
 		context.strokeStyle = state.strokeColor;
 		context.lineWidth = state.strokeWidth;
-
 		switch (state.drawType) {
 			case 'rect':
 				__drawRect.call(self, event, _startPos);
@@ -844,7 +836,6 @@ function __bindEvents() {
 		_utils2.default.$on(document, 'mouseup', _handles.onMouseUp);
 	};
 
-	//鼠标移动
 	_handles.onMouseMove = function (event) {
 		if (!!~STROKE_TYPES.indexOf(state.drawType) === false || state.drawType === 'font') {
 			return;
@@ -864,7 +855,6 @@ function __bindEvents() {
 		}
 	};
 
-	//鼠标离开
 	_handles.onMouseUp = function (event) {
 		_utils2.default.$off(document, 'mousemove', _handles.onMouseMove);
 		_utils2.default.$off(document, 'mouseup', _handles.onMouseUp);
@@ -873,7 +863,6 @@ function __bindEvents() {
 		}
 	};
 
-	//插入文本输入框
 	_handles.insertTextHelper = function (event) {
 		event.stopPropagation();
 		if (state.drawType !== 'font') {
@@ -887,15 +876,20 @@ function __bindEvents() {
 		state.isEntry = true;
 	};
 
-	//移除文本输入框
 	_handles.removeTextHelper = function (event) {
 		if (state.drawType !== 'font') {
 			removeTextHelper();
-		} else {
-			if (!event.target.closest('#canvas-tools-input')) {
-				__drawFont.call(self, event);
-			}
+		} else if (!event.target.closest('#canvas-tools-input')) {
+			__drawFont.call(self, event);
 		}
+	};
+
+	_handles.resize = function (event) {
+		rect.width = canvas.width;
+		rect.height = canvas.height;
+		rect.top = canvas.offsetTop;
+		rect.left = canvas.offsetLeft;
+		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event);
 	};
 
 	//按钮事件
@@ -913,11 +907,14 @@ function __bindEvents() {
 	//矩形，椭圆，画笔等绘制
 	);_utils2.default.$on(canvas, 'mousedown', _handles.onMouseDown
 
-	//文字输入
+	//插入文本辅助框
 	);_utils2.default.$on(canvas, 'click', _handles.insertTextHelper
 
-	//移除文字输入框
-	);_utils2.default.$on(document, 'click', _handles.removeTextHelper);
+	//移除文本辅助框
+	);_utils2.default.$on(document, 'click', _handles.removeTextHelper
+
+	//window resize
+	);window.addEventListener('resize', _handles.resize);
 }
 
 /**
@@ -1157,6 +1154,7 @@ var CanvasTools = function () {
 			_utils2.default.$off(canvas, 'mousedown', _handles.onMouseDown);
 			_utils2.default.$off(canvas, 'click', _handles.insertTextHelper);
 			_utils2.default.$off(document, 'click', _handles.removeTextHelper);
+			window.removeEventListener('resize', _handles.resize);
 			$textHelper && $textHelper.parentNoed.removeChild($textHelper);
 			this.canvas = null;
 			this.context = null;

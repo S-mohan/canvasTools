@@ -166,7 +166,7 @@ const classList = (elements, type = 'add', classes = '') => {
 }
 
 
-export default{
+export default {
 	$,
 	each,
 	bind,

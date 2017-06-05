@@ -275,27 +275,22 @@ function __bindEvents() {
 			return
 		}
 
-		if (value === 'undo') {
-
-			//history[0]是画布的初始状态
-			//因此只有多于1个历史记录时才可以恢复上一步
-			if (history.length > 1) {
-				history.pop()
-				context.putImageData(history[history.length - 1], 0, 0, 0, 0, rect.width, rect.height)
-			}
+		//history[0]是画布的初始状态
+		//因此只有多于1个历史记录时才可以恢复上一步
+		if (value === 'undo' && history.length > 1) {
+			history.pop()
+			context.putImageData(history[history.length - 1], 0, 0, 0, 0, rect.width, rect.height)
 		}
 
 		__toggleCanvasCursor.call(self)
 	}
 
-	//切换颜色
 	_handles.toggleColor = function(event) {
 		const color = this.getAttribute('data-value')
 		state.strokeColor = color
 		utils.each($colorSelected, (index, item) => item.style.background = color)
 	}
 
-	//切换画笔大小
 	_handles.toggleStrokeWidth = function(event) {
 		state.strokeWidth = Number(this.getAttribute('data-value'))
 		utils.each($strokeWidth, (index, item) => {
@@ -305,7 +300,6 @@ function __bindEvents() {
 		})
 	}
 
-	//切换fontSize
 	_handles.toggleFontSize = function(event) {
 		state.fontSize = Number(this.value)
 	}
@@ -313,8 +307,6 @@ function __bindEvents() {
 	//鼠标在画布上的初始位置
 	let _startPos
 
-
-	//鼠标点击
 	_handles.onMouseDown = function(event) {
 		if (!!~STROKE_TYPES.indexOf(state.drawType) === false || state.drawType === 'font') {
 			return
@@ -330,7 +322,6 @@ function __bindEvents() {
 		context.shadowBlur = 0
 		context.strokeStyle = state.strokeColor
 		context.lineWidth = state.strokeWidth
-
 		switch (state.drawType) {
 			case 'rect':
 				__drawRect.call(self, event, _startPos)
@@ -348,7 +339,6 @@ function __bindEvents() {
 		utils.$on(document, 'mouseup', _handles.onMouseUp)
 	}
 
-	//鼠标移动
 	_handles.onMouseMove = function(event) {
 		if (!!~STROKE_TYPES.indexOf(state.drawType) === false || state.drawType === 'font') {
 			return
@@ -368,7 +358,6 @@ function __bindEvents() {
 		}
 	}
 
-	//鼠标离开
 	_handles.onMouseUp = function(event) {
 		utils.$off(document, 'mousemove', _handles.onMouseMove)
 		utils.$off(document, 'mouseup', _handles.onMouseUp)
@@ -377,7 +366,6 @@ function __bindEvents() {
 		}
 	}
 
-	//插入文本输入框
 	_handles.insertTextHelper = function(event) {
 		event.stopPropagation()
 		if (state.drawType !== 'font') {
@@ -391,15 +379,20 @@ function __bindEvents() {
 		state.isEntry = true
 	}
 
-	//移除文本输入框
 	_handles.removeTextHelper = function(event) {
 		if (state.drawType !== 'font') {
 			removeTextHelper()
-		} else {
-			if (!event.target.closest('#canvas-tools-input')) {
-				__drawFont.call(self, event)
-			}
+		} else if (!event.target.closest('#canvas-tools-input')) {
+			__drawFont.call(self, event)
 		}
+	}
+
+	_handles.resize = function(event) {
+		rect.width = canvas.width
+		rect.height = canvas.height
+		rect.top = canvas.offsetTop
+		rect.left = canvas.offsetLeft
+		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event)
 	}
 
 
@@ -418,12 +411,14 @@ function __bindEvents() {
 	//矩形，椭圆，画笔等绘制
 	utils.$on(canvas, 'mousedown', _handles.onMouseDown)
 
-	//文字输入
+	//插入文本辅助框
 	utils.$on(canvas, 'click', _handles.insertTextHelper)
 
-	//移除文字输入框
+	//移除文本辅助框
 	utils.$on(document, 'click', _handles.removeTextHelper)
 
+	//window resize
+	window.addEventListener('resize', _handles.resize)
 }
 
 /**
@@ -667,6 +662,7 @@ class CanvasTools {
 		utils.$off(canvas, 'mousedown', _handles.onMouseDown)
 		utils.$off(canvas, 'click', _handles.insertTextHelper)
 		utils.$off(document, 'click', _handles.removeTextHelper)
+		window.removeEventListener('resize', _handles.resize)
 		$textHelper && $textHelper.parentNoed.removeChild($textHelper)
 		this.canvas = null
 		this.context = null
