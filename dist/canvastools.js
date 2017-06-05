@@ -174,7 +174,7 @@ var getButtons = function getButtons() {
 	for (var key in ButtonsMap) {
 		if (useButton(key)) {
 			var btn = ButtonsMap[key];
-			html.push('<div class="canvas-tools-btn js-btn" data-panel="' + (btn.panel || '') + '" data-value="' + key + '" data-action="" title="' + btn.name + '">\n\t\t\t<a class="btn-toggle' + (key === 'save' ? ' js-canvas-save' : '') + '"><i class="canvas-tools-icon__' + key + '"></i></a>\n\t\t\t</div>');
+			html.push('<div class="canvas-tools-btn js-btn" data-panel="' + (btn.panel || '') + '" data-value="' + key + '" data-action="" title="' + btn.name + '">\n\t\t\t<a class="btn-toggle"><i class="canvas-tools-icon__' + key + '"></i></a>\n\t\t\t</div>');
 		}
 	}
 	return html.join('');
@@ -676,8 +676,41 @@ var defaults = {
 	//显示按钮
 	buttons: ['rect', 'ellipse', 'brush', 'font', 'undo', 'save']
 
-	//相关事件绑定
-};function __bindEvents() {
+	//创建一个下载链接
+};var $saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a'
+
+//是否支持原生下载
+);var canUseSaveLink = 'download' in $saveLink;
+
+//出发click事件
+var _click = function _click(element) {
+	return element.dispatchEvent(new MouseEvent("click")
+
+	//下载文件
+	);
+};var __downloadFile = function __downloadFile() {
+	var fileName = 'canvas_' + Date.now() + '.png';
+	var canvas = this.canvas;
+	var fileUrl = void 0;
+	if (canUseSaveLink) {
+		fileUrl = canvas.toDataURL('png');
+		fileUrl = fileUrl.replace('image/png', 'image/octet-stream');
+		setTimeout(function () {
+			$saveLink.href = fileUrl;
+			$saveLink.download = fileName;
+			_click($saveLink);
+		});
+	}
+	//for ie10+ 
+	else if (typeof navigator !== "undefined" && typeof canvas.msToBlob === 'function' && navigator.msSaveBlob) {
+			navigator.msSaveBlob(canvas.msToBlob(), fileName);
+		} else {
+			console.log('您的浏览器不支持该操作');
+		}
+};
+
+//相关事件绑定
+function __bindEvents() {
 	var self = this;
 	var canvas = this.canvas,
 	    context = this.context,
@@ -695,11 +728,10 @@ var defaults = {
 	    $colorSelected = _utils2.default.$('.js-color-selected', $el),
 	    $colors = _utils2.default.$('.js-color', $el),
 	    $strokeWidth = _utils2.default.$('.js-stroke-width', $el),
-	    $fontSize = _utils2.default.$('.js-font-size', $el),
-	    $saveLink = _utils2.default.$('.js-canvas-save', $el)[0];
+	    $fontSize = _utils2.default.$('.js-font-size', $el
 
 	//按钮事件
-	_handles.btnEmit = function (event) {
+	);_handles.btnEmit = function (event) {
 		var _this = this;
 
 		event.stopPropagation();
@@ -730,6 +762,11 @@ var defaults = {
 		} else {
 			//$fontPanel.style.display = 'none'
 			//$strokePanel.style.display = 'none'
+		}
+
+		if (value === 'save') {
+			__downloadFile.call(self);
+			return;
 		}
 
 		if (value === 'undo') {
@@ -860,15 +897,6 @@ var defaults = {
 		}
 	};
 
-	//下载
-	_handles.download = function (event) {
-		event.stopPropagation();
-		var imageData = canvas.toDataURL('png');
-		imageData = imageData.replace('image/png', 'image/octet-stream');
-		this.href = imageData;
-		this.download = 'canvas_' + Date.now() + '.png';
-	};
-
 	//按钮事件
 	_utils2.default.$on($btns, 'click', _handles.btnEmit
 
@@ -888,10 +916,7 @@ var defaults = {
 	);_utils2.default.$on(canvas, 'click', _handles.insertTextHelper
 
 	//移除文字输入框
-	);_utils2.default.$on(document, 'click', _handles.removeTextHelper
-
-	//下载
-	);_utils2.default.$on($saveLink, 'click', _handles.download);
+	);_utils2.default.$on(document, 'click', _handles.removeTextHelper);
 }
 
 /**
@@ -1122,7 +1147,6 @@ var CanvasTools = function () {
 			    $colors = _utils2.default.$('.js-color', $el),
 			    $strokeWidth = _utils2.default.$('.js-stroke-width', $el),
 			    $fontSize = _utils2.default.$('.js-font-size', $el),
-			    $saveLink = _utils2.default.$('.js-canvas-save', $el)[0],
 			    $textHelper = document.getElementById('canvas-tools-input');
 
 			_utils2.default.$off($btns, 'click', _handles.btnEmit);
@@ -1132,7 +1156,6 @@ var CanvasTools = function () {
 			_utils2.default.$off(canvas, 'mousedown', _handles.onMouseDown);
 			_utils2.default.$off(canvas, 'click', _handles.insertTextHelper);
 			_utils2.default.$off(document, 'click', _handles.removeTextHelper);
-			_utils2.default.$off($saveLink, 'click', _handles.download);
 			$textHelper && $textHelper.parentNoed.removeChild($textHelper);
 			this.canvas = null;
 			this.context = null;

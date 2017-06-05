@@ -182,6 +182,38 @@ const defaults = {
 }
 
 
+//创建一个下载链接
+const $saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
+
+//是否支持原生下载
+const canUseSaveLink = 'download' in $saveLink
+
+//出发click事件
+const _click = element => element.dispatchEvent(new MouseEvent("click"))
+
+//下载文件
+const __downloadFile = function () {
+	const fileName = `canvas_${Date.now()}.png`
+	const canvas = this.canvas
+	let fileUrl
+	if (canUseSaveLink) {
+		fileUrl = canvas.toDataURL('png')
+		fileUrl = fileUrl.replace('image/png', 'image/octet-stream')
+		setTimeout(() => {
+			$saveLink.href = fileUrl
+			$saveLink.download = fileName
+			_click($saveLink)
+		})
+	}
+	//for ie10+ 
+	else if (typeof navigator !== "undefined" && typeof canvas.msToBlob === 'function' && navigator.msSaveBlob) {
+		navigator.msSaveBlob(canvas.msToBlob(), fileName)
+	} else {
+		console.log('您的浏览器不支持该操作')
+	}
+}
+
+
 //相关事件绑定
 function __bindEvents() {
 	const self = this
@@ -202,8 +234,7 @@ function __bindEvents() {
 		$colorSelected = utils.$('.js-color-selected', $el),
 		$colors = utils.$('.js-color', $el),
 		$strokeWidth = utils.$('.js-stroke-width', $el),
-		$fontSize = utils.$('.js-font-size', $el),
-		$saveLink = utils.$('.js-canvas-save', $el)[0]
+		$fontSize = utils.$('.js-font-size', $el)
 
 	//按钮事件
 	_handles.btnEmit = function(event) {
@@ -235,6 +266,11 @@ function __bindEvents() {
 		} else {
 			//$fontPanel.style.display = 'none'
 			//$strokePanel.style.display = 'none'
+		}
+
+		if (value === 'save') {
+			__downloadFile.call(self)
+			return
 		}
 
 		if (value === 'undo') {
@@ -364,15 +400,7 @@ function __bindEvents() {
 		}
 	}
 
-	//下载
-	_handles.download = function(event) {
-		event.stopPropagation()
-		let imageData = canvas.toDataURL('png')
-		imageData = imageData.replace('image/png', 'image/octet-stream')
-		this.href = imageData
-		this.download = `canvas_${Date.now()}.png`
-	}
-
+	
 	//按钮事件
 	utils.$on($btns, 'click', _handles.btnEmit)
 
@@ -394,8 +422,6 @@ function __bindEvents() {
 	//移除文字输入框
 	utils.$on(document, 'click', _handles.removeTextHelper)
 
-	//下载
-	utils.$on($saveLink, 'click', _handles.download)
 }
 
 /**
@@ -630,7 +656,6 @@ class CanvasTools {
 			$colors = utils.$('.js-color', $el),
 			$strokeWidth = utils.$('.js-stroke-width', $el),
 			$fontSize = utils.$('.js-font-size', $el),
-			$saveLink = utils.$('.js-canvas-save', $el)[0],
 			$textHelper = document.getElementById('canvas-tools-input')
 
 		utils.$off($btns, 'click', _handles.btnEmit)
@@ -640,7 +665,6 @@ class CanvasTools {
 		utils.$off(canvas, 'mousedown', _handles.onMouseDown)
 		utils.$off(canvas, 'click', _handles.insertTextHelper)
 		utils.$off(document, 'click', _handles.removeTextHelper)
-		utils.$off($saveLink, 'click', _handles.download)
 		$textHelper && $textHelper.parentNoed.removeChild($textHelper)
 		this.canvas = null
 		this.context = null

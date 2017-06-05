@@ -59,7 +59,7 @@ const getButtons = (buttons = []) => {
 		if (useButton(key)) {
 			let btn = ButtonsMap[key]
 			html.push(`<div class="canvas-tools-btn js-btn" data-panel="${btn.panel || ''}" data-value="${key}" data-action="" title="${btn.name}">
-			<a class="btn-toggle${key === 'save' ? ' js-canvas-save' : ''}"><i class="canvas-tools-icon__${key}"></i></a>
+			<a class="btn-toggle"><i class="canvas-tools-icon__${key}"></i></a>
 			</div>`)
 		}
 	}
