@@ -181,22 +181,19 @@ const defaults = {
 	buttons: ['rect', 'ellipse', 'brush', 'font', 'undo', 'save']
 }
 
-
 //创建一个下载链接
 const $saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
 
 //是否支持原生下载
 const canUseSaveLink = 'download' in $saveLink
 
-
 //下载文件
 const __downloadFile = function() {
 	const fileName = `canvas_${Date.now()}.png`
 	const canvas = this.canvas
-	let fileUrl
 
 	if (canUseSaveLink) {
-		fileUrl = canvas.toDataURL('png')
+		let fileUrl = canvas.toDataURL('png')
 		fileUrl = fileUrl.replace('image/png', 'image/octet-stream')
 		setTimeout(() => {
 			$saveLink.href = fileUrl

@@ -686,10 +686,9 @@ var defaults = {
 var __downloadFile = function __downloadFile() {
 	var fileName = 'canvas_' + Date.now() + '.png';
 	var canvas = this.canvas;
-	var fileUrl = void 0;
 
 	if (canUseSaveLink) {
-		fileUrl = canvas.toDataURL('png');
+		var fileUrl = canvas.toDataURL('png');
 		fileUrl = fileUrl.replace('image/png', 'image/octet-stream');
 		setTimeout(function () {
 			$saveLink.href = fileUrl;
