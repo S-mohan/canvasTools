@@ -613,7 +613,7 @@ var insertTextHelper = function insertTextHelper(event, state, rect) {
 		'z-index': 19900206,
 		'font-family': TEXT_FONT_FAMILY,
 		display: 'block',
-		position: 'fixed',
+		position: 'absolute',
 		top: y + 'px',
 		left: x + 'px',
 		color: state.strokeColor,

@@ -115,7 +115,7 @@ const insertTextHelper = (event, state, rect) => {
 		'z-index': 19900206,
 		'font-family': TEXT_FONT_FAMILY,
 		display: 'block',
-		position: 'fixed',
+		position: 'absolute',
 		top: y + 'px',
 		left: x + 'px',
 		color: state.strokeColor,
@@ -146,7 +146,6 @@ const removeTextHelper = () => {
 	$textHelper.innerHTML = ''
 	$textHelper.style.cssText = 'display: none';
 }
-
 
 
 /**
@@ -181,7 +180,6 @@ const defaults = {
 	//显示按钮
 	buttons: ['rect', 'ellipse', 'brush', 'font', 'undo', 'save']
 }
-
 
 
 //相关事件绑定
