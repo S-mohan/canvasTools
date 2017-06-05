@@ -12,11 +12,14 @@ const STROKE_DEFAULT_COLOR = '#fb3838'
 //默认画笔大小
 const STROKE_DEFAULT_WIDTH = 2
 
-//输入框padding值
+//辅助输入框padding值
 const TEXT_HELPER_PADDING = 2
 
-//输入框层级
+//辅助输入框层级
 const TEXT_HELPER_ZINDEX = 1990
+
+//辅助输入框ID
+const TEXT_HELPER_ID = 'canvas-tools_text_helper'
 
 //输入框默认字体大小
 //以设置的字体大小为准，改值仅做辅助值
@@ -35,6 +38,7 @@ const TEXT_FONT_FAMILY = '"Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","H
 const buildStrokePanel = (stroke = STROKE_DEFAULT_COLOR, color = STROKE_DEFAULT_COLOR) => {
 	const el = document.createElement('div')
 	el.className = 'canvas-tools__panel js-panel__stroke'
+	el.style.cssText += 'white-space: nowrap!important;'
 	el.innerHTML = Template.getStrokePanel(stroke) + Template.getColorPanel(color)
 	return el
 }
@@ -48,6 +52,7 @@ const buildStrokePanel = (stroke = STROKE_DEFAULT_COLOR, color = STROKE_DEFAULT_
 const buildFontPanel = (fontSize = TEXT_HELPER_FONT_SIZE, color = STROKE_DEFAULT_COLOR) => {
 	const el = document.createElement('div')
 	el.className = 'canvas-tools__panel js-panel__font'
+	el.style.cssText += 'white-space: nowrap!important;'
 	el.innerHTML = Template.getFontPanel(fontSize) + Template.getColorPanel(color)
 	return el
 }
@@ -58,13 +63,13 @@ const buildFontPanel = (fontSize = TEXT_HELPER_FONT_SIZE, color = STROKE_DEFAULT
  * @return {HTMLElement}
  */
 const getTextHelper = () => {
-	let $textHelper = document.getElementById('canvas-tools-input')
+	let $textHelper = document.getElementById(TEXT_HELPER_ID)
 	if (!$textHelper) {
 		$textHelper = document.createElement('div')
 		$textHelper.setAttribute('contenteditable', 'plaintext-only')
 		$textHelper.setAttribute('spellcheck', 'false')
-		$textHelper.setAttribute('id', 'canvas-tools-input')
-		$textHelper.className = 'canvas-tools-input'
+		$textHelper.setAttribute('id', TEXT_HELPER_ID)
+		$textHelper.className = TEXT_HELPER_ID
 		document.body.appendChild($textHelper)
 	}
 	$textHelper.innerHTML = ''
@@ -142,7 +147,7 @@ const insertTextHelper = (event, state, rect) => {
  * @return 
  */
 const removeTextHelper = () => {
-	let $textHelper = document.getElementById('canvas-tools-input')
+	let $textHelper = document.getElementById(TEXT_HELPER_ID)
 	if (!$textHelper) {
 		return
 	}
@@ -390,10 +395,11 @@ function __bindEvents() {
 	}
 
 	_handles.resize = function(event) {
-		rect.width = canvas.width
-		rect.height = canvas.height
-		rect.top = canvas.offsetTop
-		rect.left = canvas.offsetLeft
+		const _rect = canvas.getBoundingClientRect()
+		rect.width = canvas.offsetWidth
+		rect.height = canvas.offsetHeight
+		rect.top = _rect.top 
+		rect.left = _rect.left
 		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event)
 	}
 
@@ -503,7 +509,7 @@ function __drawBrush(event, start = null) {
  * @return {[type]} 
  */
 function __drawFont(event) {
-	const $textHelper = document.getElementById('canvas-tools-input')
+	const $textHelper = document.getElementById(TEXT_HELPER_ID)
 	if (!$textHelper) {
 		this.state.isEntry = false
 		return
@@ -618,10 +624,11 @@ class CanvasTools {
 		this.state.strokeColor = STROKE_DEFAULT_COLOR
 		this.state.drawType = 'brush'
 		this.state.isEntry = false
-		this.rect.width = canvas.width
-		this.rect.height = canvas.height
-		this.rect.top = canvas.offsetTop
-		this.rect.left = canvas.offsetLeft
+		this.rect.width = canvas.offsetWidth
+		this.rect.height = canvas.offsetHeight
+		const rect = canvas.getBoundingClientRect()
+		this.rect.top = rect.top
+		this.rect.left = rect.left
 
 		//保存现场
 		this.state.lastImageData = this.context.getImageData(0, 0, this.rect.width, this.rect.height)
@@ -652,6 +659,10 @@ class CanvasTools {
 		__bindEvents.call(this)
 	}
 
+	refresh () {
+
+	}
+
 	/**
 	 * destory
 	 * @return 
@@ -667,7 +678,7 @@ class CanvasTools {
 			$colors = utils.$('.js-color', $el),
 			$strokeWidth = utils.$('.js-stroke-width', $el),
 			$fontSize = utils.$('.js-font-size', $el),
-			$textHelper = document.getElementById('canvas-tools-input')
+			$textHelper = document.getElementById(TEXT_HELPER_ID)
 
 		utils.$off($btns, 'click', _handles.btnEmit)
 		utils.$off($colors, 'click', _handles.toggleColor)

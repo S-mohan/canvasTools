@@ -41,13 +41,15 @@
 	content: "\e69a";
 }
 .canvas-tools {
-	border: 1px solid #ccc;
+	display: inline-block;
+	border: 1px solid #dcdcdc;
 	height: 2rem;
 	position: relative;
 	font-size: 0;
 	padding: 3px 5px;
 	user-select: none;
-
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(#000,.075), 0 1px 4px rgba(#000,.075);
 	[class^="canvas-tools-icon__"], [class*=" canvas-tools-icon__"] {
 		font-size: 1.125rem;
 		position: relative;
@@ -115,13 +117,15 @@
 	top: 100%;
 	margin-top: 5px;
 	left: 0;
-	background-color: rgba(#eaeef5, .75);
+	background-color: rgba(#fff, .95);
 	border: 1px solid #d7dee2;
 	cursor: default;
 	width: auto;
 	padding: 4px 10px;
 	text-align: left;
 	display: none;
+	white-space: nowrap!important;
+	box-shadow: 0 1px 3px rgba(#000,.05), 0 1px 4px rgba(#000,.05);
 	> .font-select {
 		display: inline-block;
 		vertical-align: middle;
@@ -167,18 +171,6 @@
 			i {
 				border-radius: 50%;
 				background-color: #2f8ddd;
-			}
-			&:nth-child(1) i {
-				width: 3px;
-				height: 3px;
-			}
-			&:nth-child(2) i {
-				width: 5px;
-				height: 5px;
-			}
-			&:nth-child(3) i {
-				width: 7px;
-				height: 7px;
 			}
 		}
 	}
@@ -256,7 +248,7 @@ $brush : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XA
 	cursor: default;
 }
 
-.canvas-tools-input {
+.canvas-tools_text_helper {
 	display: none;
 	position: absolute;
 	border: 1px dashed #000;

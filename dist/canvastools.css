@@ -49,7 +49,8 @@
   content: "\E69A"; }
 
 .canvas-tools {
-  border: 1px solid #ccc;
+  display: inline-block;
+  border: 1px solid #dcdcdc;
   height: 2rem;
   position: relative;
   font-size: 0;
@@ -57,7 +58,10 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; }
+  user-select: none;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.075), 0 1px 4px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.075), 0 1px 4px rgba(0, 0, 0, 0.075); }
   .canvas-tools [class^="canvas-tools-icon__"], .canvas-tools [class*=" canvas-tools-icon__"] {
     font-size: 1.125rem;
     position: relative; }
@@ -122,13 +126,16 @@
   top: 100%;
   margin-top: 5px;
   left: 0;
-  background-color: rgba(234, 238, 245, 0.75);
+  background-color: rgba(255, 255, 255, 0.95);
   border: 1px solid #d7dee2;
   cursor: default;
   width: auto;
   padding: 4px 10px;
   text-align: left;
-  display: none; }
+  display: none;
+  white-space: nowrap !important;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 4px rgba(0, 0, 0, 0.05); }
   .canvas-tools .canvas-tools__panel > .font-select {
     display: inline-block;
     vertical-align: middle;
@@ -167,15 +174,6 @@
       .canvas-tools .canvas-tools__panel > .strokes > .stroke i {
         border-radius: 50%;
         background-color: #2f8ddd; }
-      .canvas-tools .canvas-tools__panel > .strokes > .stroke:nth-child(1) i {
-        width: 3px;
-        height: 3px; }
-      .canvas-tools .canvas-tools__panel > .strokes > .stroke:nth-child(2) i {
-        width: 5px;
-        height: 5px; }
-      .canvas-tools .canvas-tools__panel > .strokes > .stroke:nth-child(3) i {
-        width: 7px;
-        height: 7px; }
   .canvas-tools .canvas-tools__panel > .colors {
     display: inline-block;
     vertical-align: middle;
@@ -231,7 +229,7 @@
 .canvas-cursor__default {
   cursor: default; }
 
-.canvas-tools-input {
+.canvas-tools_text_helper {
   display: none;
   position: absolute;
   border: 1px dashed #000;

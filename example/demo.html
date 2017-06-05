@@ -3,35 +3,134 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
+	<link rel="stylesheet"  href="https://smohan.net/static/mo.css">
 	<link rel="stylesheet" href="../dist/canvastools.css">
 	<style type="text/css">
-		.canvas {
-			width: 800px;
-			margin: 100px auto;
+		body {
+			background-color: #f0f0f0;
 		}
-		.canvas canvas {
-			display: block;
-			margin: 0 auto 1rem auto;
-			border : 1px solid #ccc;
+		.canvas-gloup {
+			margin: 1rem;
+			height: 530px;
 		}
+
+		.canvas-gloup .canvas-item {
+			height: 100%;
+			border: 1px solid #ccc;
+			background-color: #f7f7f7;
+			position: relative;
+			width: 33.3333%;
+			float: left;
+		}
+
+		.canvas-gloup .canvas-item canvas {
+			background: url(./loading.gif) center no-repeat;
+		}
+		.canvas-gloup .title {
+			margin: 0;
+			padding: 1rem;
+			line-height: 1;
+			font-size : 1rem;
+			background-color: #fff;
+		}
+		.canvas-gloup .canvas-item .tools {
+			padding: 1rem;
+			text-align: center;
+		}
+
+		.canvas-gloup .canvas-item .tools-fixed {
+			position: absolute;
+			z-index: 10;
+			bottom: 32px;
+			left: 50%;
+			margin-left: -110px;
+		}
+
+		.project-name {
+			padding: 2rem 2rem 1rem 2rem;
+			text-align: center;
+			font-size: 3rem;
+			font-weight: bold;
+		}
+
+		.link-group {
+			text-align: center;
+			padding-bottom: 1rem
+		}
+
 	</style>
 </head>
 <body>
 
+	<h1 class="project-name">CanvasTools.js</h1>
+	<div class="link-group">
+		<div class="mo-button-group">
+			<a href="./demo.html" class="mo-button mo-button--positive">Demo1</a>
+			<a href="./zhihu.html" class="mo-button">仿知乎截图反馈</a>
+		</div>
+	</div>
 
-<div class="canvas">
-	<canvas id="myCanvas" width="800" height="500"></canvas>
-	<div id="canvasTools"></div>
-</div>
+	<div class="canvas-gloup" id="canvas-group">
+		<div class="canvas-item">
+			<h3 class="title">使用图片填充的画布</h3>
+			<canvas id="canvas1"></canvas>
+			<div class="tools" id="tools1"></div>
+		</div>
+		<div class="canvas-item">
+			<h3 class="title">使用渐变填充的画布</h3>
+			<canvas id="canvas2"></canvas>
+			<div class="tools" id="tools2"></div>
+		</div>
+		<div class="canvas-item">
+			<h3 class="title">工具栏悬浮</h3>
+			<canvas id="canvas3"></canvas>
+			<div class="tools-fixed" id="tools3"></div>
+		</div>
+	</div>
 
 
+	<script src="../dist/canvastools.js"></script>
+	<script>
+		var canvasGroup = document.getElementById('canvas-group')
+		var width = (canvasGroup.offsetWidth - 6) / 3
+		var height = canvasGroup.offsetHeight
+		var canvas1 = document.getElementById('canvas1')
+		var canvas2 = document.getElementById('canvas2')
+		var canvas3 = document.getElementById('canvas3')
+		var ctx1 = canvas1.getContext('2d')
+		var ctx2 = canvas2.getContext('2d')
+		var ctx3 = canvas3.getContext('2d')
+		var cTools1, cTools2, cTools3
+		canvas1.width = width
+		canvas1.height = 400
+		canvas2.width = width
+		canvas2.height = 400
+		canvas3.width = width
+		canvas3.height = 480
 
-<script src="../dist/canvastools.js"></script>
-<script>
-	var capTools = new CanvasTools(document.getElementById('myCanvas'), {
-		container : document.getElementById('canvasTools')
-	})
-	console.log(capTools)
+
+	//canvas1 填充一张图片
+	var image = new Image()
+	image.src = './thumb.jpg'
+	image.onload = function () {
+		ctx1.drawImage(image, 0, 0, canvas1.width, 400)
+		cTools1 = new CanvasTools(canvas1, {container : document.getElementById('tools1')})
+	} 
+
+	//canvas2 使用渐变填充背景
+	var grd = ctx2.createLinearGradient(0, 0, canvas2.width, 400)
+	grd.addColorStop(0, '#6c5373');
+	grd.addColorStop(.75, '#edb1fe');
+	ctx2.fillStyle = grd
+	ctx2.fillRect(0, 0, canvas2.width, canvas2.height)
+	cTools2 = new CanvasTools(canvas2, {container : document.getElementById('tools2')})
+
+	var image3 = new Image()
+	image3.src = './thumb2.jpg'
+	image3.onload = function () {
+		ctx3.drawImage(image3, 0, 0, canvas3.width, 480)
+		cTools3 = new CanvasTools(canvas3, {container : document.getElementById('tools3')})
+	} 
 </script>
 </body>
 </html>
