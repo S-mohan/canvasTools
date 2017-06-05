@@ -15,6 +15,9 @@ const STROKE_DEFAULT_WIDTH = 2
 //输入框padding值
 const TEXT_HELPER_PADDING = 2
 
+//输入框层级
+const TEXT_HELPER_ZINDEX = 1990
+
 //输入框默认字体大小
 //以设置的字体大小为准，改值仅做辅助值
 const TEXT_HELPER_FONT_SIZE = 12
@@ -112,7 +115,7 @@ const insertTextHelper = (event, state, rect) => {
 		'min-height': threshold + 'px',
 		'max-width': maxW + 'px',
 		'max-height': maxH + 'px',
-		'z-index': 19900206,
+		'z-index': TEXT_HELPER_ZINDEX,
 		'font-family': TEXT_FONT_FAMILY,
 		display: 'block',
 		position: 'absolute',
@@ -204,7 +207,7 @@ const __downloadFile = function() {
 		})
 	}
 
-	//for ie10+ 
+	//for ie 10+ 
 	else if (typeof navigator !== "undefined" && typeof canvas.msToBlob === 'function' && navigator.msSaveBlob) {
 		navigator.msSaveBlob(canvas.msToBlob(), fileName)
 	}
@@ -343,7 +346,6 @@ function __bindEvents() {
 		if (!!~STROKE_TYPES.indexOf(state.drawType) === false || state.drawType === 'font') {
 			return
 		}
-
 		switch (state.drawType) {
 			case 'rect':
 				__drawRect.call(self, event, _startPos)
@@ -395,7 +397,6 @@ function __bindEvents() {
 		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event)
 	}
 
-
 	//按钮事件
 	utils.$on($btns, 'click', _handles.btnEmit)
 
@@ -436,7 +437,6 @@ function __drawRect(event, start) {
 	const pos = getPos(event, rect)
 	let width = pos.x - start.x
 	let height = pos.y - start.y
-
 	context.clearRect(0, 0, rect.width, rect.height)
 	context.putImageData(state.lastImageData, 0, 0, 0, 0, rect.width, rect.height)
 	context.save()
@@ -464,7 +464,6 @@ function __drawEllipse(event, start) {
 	let scaleY = 1 * ((pos.y - start.y) / 2)
 	let x = (start.x / scaleX) + 1
 	let y = (start.y / scaleY) + 1
-
 	context.clearRect(0, 0, rect.width, rect.height)
 	context.putImageData(state.lastImageData, 0, 0, 0, 0, rect.width, rect.height)
 	context.save()
@@ -516,7 +515,6 @@ function __drawFont(event) {
 		removeTextHelper()
 		return
 	}
-
 	const style = utils.getComputedStyles($textHelper),
 		threshold = this.state.fontSize || TEXT_HELPER_FONT_SIZE,
 		padding = 2 * TEXT_HELPER_PADDING,
@@ -537,7 +535,6 @@ function __drawFont(event) {
 
 		//让文字自动换行
 		lineWidth += context.measureText(char).width
-
 		if (lineWidth > this.rect.width - x) {
 			context.fillText(content.substring(lastSubStrIndex, i), x, y)
 			y += threshold
@@ -591,8 +588,18 @@ function __pushHistory() {
 	this.history.push(this.context.getImageData(0, 0, this.rect.width, this.rect.height))
 }
 
-
+/**
+ * CanvasTools
+ * Class
+ */
 class CanvasTools {
+
+	/**
+	 * constructor
+	 * @param  {CanvasElement} canvas  [canvas element object]
+	 * @param  {Object} options [config]
+	 * @return {Object}         [instance]
+	 */
 	constructor(canvas, options) {
 		if (!canvas || typeof canvas.getContext !== 'function') {
 			throw new Error('invalid canvas object')
@@ -627,6 +634,10 @@ class CanvasTools {
 		this.render()
 	}
 
+	/**
+	 * 初始化工具条到DOM
+	 * @return
+	 */
 	render() {
 		const C = this.config
 		const S = this.state
@@ -641,7 +652,10 @@ class CanvasTools {
 		__bindEvents.call(this)
 	}
 
-
+	/**
+	 * destory
+	 * @return 
+	 */
 	destory() {
 		const {
 			canvas,
