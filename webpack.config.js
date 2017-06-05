@@ -10,7 +10,7 @@ const resolve = dir => path.join(__dirname, '.', dir)
 
 const banner = `CanvasTools v${PackageJson.version} 
 (github)${PackageJson.homepage}
-(url) https://smohan.net/lab/canvas-tools
+(url) https://smohan.net/lab/canvastools
 (c) smohan <https://smohan.net>
 license ${PackageJson.license}`
 
@@ -63,7 +63,10 @@ module.exports = {
 	},
 	resolve: {
 		modules: [resolve('src')],
-		extensions: ['.json', '.js']
+		extensions: ['.json', '.js'],
+		alias: {
+			'@': resolve('src')
+		}
 	},
 	plugins: plugins
 }

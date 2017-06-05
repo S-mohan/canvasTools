@@ -106,7 +106,8 @@ const getColorPanel = (color = '#fb3838') => {
  */
 const getStrokePanel = (stroke = 2) => {
 	let html = '<div class="strokes">'
-	for (let size of StrokeWidth) {
+	for (let i = 0, len = StrokeWidth.length; i < len; i++) {
+		let size = StrokeWidth[i]
 		let classes = ['stroke', 'js-stroke-width']
 		size === stroke && classes.push('active')
 		html += `<a class="${classes.join(' ')}" data-value="${size}"><i style="width:${size + 1}px;height:${size + 1}px;"></i></a>`
@@ -123,7 +124,8 @@ const getStrokePanel = (stroke = 2) => {
  */
 const getFontPanel = (fontSize = 12) => {
 	let html = '<select class="font-select js-font-size">'
-	for (let size of FontSize) {
+	for (let i = 0, len = FontSize.length; i < len; i++) {
+		let size = FontSize[i]
 		let selected = !!(size === fontSize) ? 'selected' : ''
 		html += `<option value="${size}" ${selected}>${size}</option>`
 	}

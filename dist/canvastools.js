@@ -1,7 +1,7 @@
 /*!
  * CanvasTools v1.0.0 
  * (github)https://github.com/S-mohan/canvasTools
- * (url) https://smohan.net/lab/canvas-tools
+ * (url) https://smohan.net/lab/canvastools
  * (c) smohan <https://smohan.net>
  * license MIT
  */
@@ -85,12 +85,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -112,7 +106,7 @@ if (window.Element && !Element.prototype.closest) {
 }
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -228,33 +222,12 @@ var getStrokePanel = function getStrokePanel() {
 	var stroke = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2;
 
 	var html = '<div class="strokes">';
-	var _iteratorNormalCompletion = true;
-	var _didIteratorError = false;
-	var _iteratorError = undefined;
-
-	try {
-		for (var _iterator = StrokeWidth[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-			var size = _step.value;
-
-			var classes = ['stroke', 'js-stroke-width'];
-			size === stroke && classes.push('active');
-			html += '<a class="' + classes.join(' ') + '" data-value="' + size + '"><i style="width:' + (size + 1) + 'px;height:' + (size + 1) + 'px;"></i></a>';
-		}
-	} catch (err) {
-		_didIteratorError = true;
-		_iteratorError = err;
-	} finally {
-		try {
-			if (!_iteratorNormalCompletion && _iterator.return) {
-				_iterator.return();
-			}
-		} finally {
-			if (_didIteratorError) {
-				throw _iteratorError;
-			}
-		}
+	for (var i = 0, len = StrokeWidth.length; i < len; i++) {
+		var size = StrokeWidth[i];
+		var classes = ['stroke', 'js-stroke-width'];
+		size === stroke && classes.push('active');
+		html += '<a class="' + classes.join(' ') + '" data-value="' + size + '"><i style="width:' + (size + 1) + 'px;height:' + (size + 1) + 'px;"></i></a>';
 	}
-
 	html += '</div>';
 	return html;
 };
@@ -268,32 +241,11 @@ var getFontPanel = function getFontPanel() {
 	var fontSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 12;
 
 	var html = '<select class="font-select js-font-size">';
-	var _iteratorNormalCompletion2 = true;
-	var _didIteratorError2 = false;
-	var _iteratorError2 = undefined;
-
-	try {
-		for (var _iterator2 = FontSize[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-			var size = _step2.value;
-
-			var selected = !!(size === fontSize) ? 'selected' : '';
-			html += '<option value="' + size + '" ' + selected + '>' + size + '</option>';
-		}
-	} catch (err) {
-		_didIteratorError2 = true;
-		_iteratorError2 = err;
-	} finally {
-		try {
-			if (!_iteratorNormalCompletion2 && _iterator2.return) {
-				_iterator2.return();
-			}
-		} finally {
-			if (_didIteratorError2) {
-				throw _iteratorError2;
-			}
-		}
+	for (var i = 0, len = FontSize.length; i < len; i++) {
+		var size = FontSize[i];
+		var selected = !!(size === fontSize) ? 'selected' : '';
+		html += '<option value="' + size + '" ' + selected + '>' + size + '</option>';
 	}
-
 	html += '</select>';
 	return html;
 };
@@ -307,7 +259,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -511,6 +463,12 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -523,15 +481,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+__webpack_require__(3);
+
 __webpack_require__(0);
 
-__webpack_require__(1);
-
-var _utils = __webpack_require__(3);
+var _utils = __webpack_require__(2);
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var _template = __webpack_require__(2);
+var _template = __webpack_require__(1);
 
 var _template2 = _interopRequireDefault(_template);
 
