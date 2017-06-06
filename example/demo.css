@@ -87,19 +87,17 @@ body {
 	transition: max-height .05s ease;
 	min-height: 220px;
 	background-color: #f6f7f9;
-	border: 1px solid #ddd; 
+	border: 1px solid #ddd;
 }
 .modal-content .canvas-wrap canvas {
 	display: block;
 	max-width: 100%;
 }
-
 .modal-content .canvas-toolbar {
 	position: relative;
 	z-index: 10;
 	margin-bottom: 10px;
 }
-
 .modal-content .modal-close {
 	margin: 1rem 0 0 0;
 	display: inline-block;
@@ -107,4 +105,4 @@ body {
 	border: 1px solid #ccc;
 	cursor: pointer;
 	background-color: #fff
-} 
+}

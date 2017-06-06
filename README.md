@@ -5,6 +5,10 @@ Screenshot tool based on canvas
 
 ![CanvasTools](https://img.smohan.net/project/d73e2e41950ea7d342a45fc6a57bd291.jpg)
 
+#### [项目地址](https://smohan.net/lab/canvastools)
+#### [DEMO](https://s-mohan.github.io/demo/canvastools/demo.html)
+#### [仿知乎截图反馈](https://s-mohan.github.io/demo/canvastools/zhihu.html)
+
 项目构思来源于知乎建议反馈功能中的截图反馈。期初看到该功能，惊为天人，不得不佩服知乎对用户体验的细节追求。然后又对比和参考了QQ截图（基本样式来源于此），花了三天时间完成了`CanvasTools`项目的构建。
 截止目前，在完成了大部分功能的同时，也学习了大部分的`Canvas API`：
 
