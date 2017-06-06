@@ -42,7 +42,7 @@ Screenshot tool based on canvas
 2.在`body`中创建`canvas`以及用来放置工具条的容器
 ```html
 ...
-<canvas id="myCanvas" width="800" height="600></canvas>
+<canvas id="myCanvas" width="800" height="600"></canvas>
 <div id="myCanvasTools"></div>
 ...
 ```
