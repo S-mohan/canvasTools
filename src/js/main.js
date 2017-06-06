@@ -165,7 +165,6 @@ const removeTextHelper = () => {
 const getPos = (event, rect) => {
 	let x = event.pageX - rect.left
 	let y = event.pageY - rect.top
-
 	if (x <= 0) x = 0
 	if (x >= rect.width) x = rect.width
 	if (y <= 0) y = 0
@@ -396,9 +395,11 @@ function __bindEvents() {
 
 	_handles.resize = function(event) {
 		const _rect = canvas.getBoundingClientRect()
-		rect.width = canvas.offsetWidth
-		rect.height = canvas.offsetHeight
-		rect.top = _rect.top 
+		rect.width = canvas.width
+		rect.height = canvas.height
+		rect.offsetWidth = canvas.offsetWidth
+		rect.offsetHeight = canvas.offsetHeight
+		rect.top = _rect.top
 		rect.left = _rect.left
 		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event)
 	}
@@ -624,8 +625,13 @@ class CanvasTools {
 		this.state.strokeColor = STROKE_DEFAULT_COLOR
 		this.state.drawType = 'brush'
 		this.state.isEntry = false
-		this.rect.width = canvas.offsetWidth
-		this.rect.height = canvas.offsetHeight
+
+		this.rect.width = canvas.width
+		this.rect.height = canvas.height
+
+		this.rect.offsetWidth = canvas.offsetWidth
+		this.rect.offsetHeight = canvas.offsetHeight
+
 		const rect = canvas.getBoundingClientRect()
 		this.rect.top = rect.top
 		this.rect.left = rect.left
@@ -659,7 +665,7 @@ class CanvasTools {
 		__bindEvents.call(this)
 	}
 
-	refresh () {
+	refresh() {
 
 	}
 
@@ -692,6 +698,7 @@ class CanvasTools {
 		this.canvas = null
 		this.context = null
 		this.history.length = 0
+		this.config.container.removeChild(this.$el)
 	}
 
 }

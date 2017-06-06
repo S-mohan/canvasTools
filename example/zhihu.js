@@ -1,48 +1,51 @@
 (function() {
-	var $screenshotModal = document.getElementById('screenshotModal')
-	var $modalShow = document.getElementById('modalShow')
-
-	var $toolsWrap = document.getElementById('canvasTools')
-	var Canvas = document.getElementById('screenshotCanvas')
-	var $canvasWrapper = Canvas.parentNode
+	var $ = function(id) {
+		return document.getElementById(id)
+	}
+	var $modal = $('modal')
+	var $openModal = $('openModal')
+	var $canvasToolBar = $('canvasToolBar')
+	var $canvasWrap = $('canvasWrap')
+	var $closeModal = $('closeModal')
+	var $screenshot = $('screenshot')
 
 
 	function parseHtml() {
-		var doc = document.documentElement
-		var clone = doc.cloneNode(true)
-		clone.querySelector('#screenshotModal').style.display = 'none'
-		return clone.outerHTML
+		return $screenshot.outerHTML
 	}
+	var $canvas, canvasTools
+	$openModal.addEventListener('click', function() {
+		$modal.style.display = 'block'
+		$canvas = document.createElement('canvas')
+		var context = $canvas.getContext('2d')
+		$canvasWrap.appendChild($canvas)
 
-
-	var canvasTools = null
-	var context = Canvas.getContext('2d')
-	$modalShow.addEventListener('click', function(event) {
-		$screenshotModal.style.display = 'block'
-		const WW = document.body.offsetWidth
-		const WH = document.body.offsetHeight
-		const CWW = $canvasWrapper.offsetWidth
-		const scale = CWW / WW
-		$canvasWrapper.style.maxHeight = WH * scale + 'px'
-		Canvas.width = WW
-		Canvas.height = WH
-		
-		rasterizeHTML.drawHTML(parseHtml(), Canvas, {
-				executeJsTimeout: 5000
+		rasterizeHTML.drawHTML(parseHtml(), $canvas, {
+				executeJsTimeout: 3000
 			})
 			.then(function(renderResult) {
-				renderResult.image.width = String(CWW)
-				renderResult.image.height = String(WH * scale)
-				Canvas.width = CWW
-				Canvas.height = WH * scale
-				context.clearRect(0, 0, Canvas.width, Canvas.height)
-				context.drawImage(renderResult.image, 0, 0, renderResult.image.width , renderResult.image.height)
-				if (!canvasTools) {
-					canvasTools = new CanvasTools(Canvas, {container : $toolsWrap}) 
-				}
+				var width = $screenshot.offsetWidth
+				var height = $screenshot.offsetHeight
+				renderResult.image.width = width
+				renderResult.image.height = height
+				$canvas.width = width
+				$canvas.height = height
+				context.clearRect(0, 0, width, height)
+				context.drawImage(renderResult.image, 0, 0, width ,height)
+				$canvasWrap.style.maxHeight = height + 'px'
+				setTimeout(function() {
+					canvasTools = new CanvasTools($canvas, {container : $canvasToolBar}) 
+				})
 			}, function(error) {
-
+				console.log(error)
 			})
 	})
 
+	$closeModal.addEventListener('click', function() {
+		$modal.style.display = 'none'
+		$canvasWrap.style.maxHeight = 0 + 'px'
+		$canvasWrap.removeChild($canvas)
+		$canvas = null
+		canvasTools.destory()
+	})
 })()

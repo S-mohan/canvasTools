@@ -1,0 +1,110 @@
+@charset 'utf-8';
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html, body {
+	height: 100%
+}
+body {
+	font-family: "Pingfang SC", "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #515151;
+	white-space: normal;
+	background-color: #f0f0f0;
+}
+.link-tab {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	font-size: 0;
+	user-select: none;
+}
+.link-tab a {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 14px;
+	border: .0625rem solid #d3d3d3;
+	white-space: nowrap;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	outline: 0;
+	font-size: .875rem;
+	line-height: 1.4286;
+	padding: .375rem 1rem;
+	background-color: #fff;
+	color: #515151;
+	text-decoration: none;
+}
+.link-tab a.active {
+	border-color: #5cb85c;
+	background-color: #5cb85c;
+	color: #fff;
+}
+.project-name {
+	padding: 2rem 2rem 1rem 2rem;
+	text-align: center;
+	font-size: 3rem;
+	font-weight: bold;
+	color: #111;
+}
+.link-group {
+	text-align: center;
+	padding-bottom: 2rem
+}
+.modal, .modal > .overlap {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+.modal {
+	z-index: 100;
+	user-select: none;
+	text-align: center;
+}
+.modal > .overlap {
+	background-color: rgba(0, 0, 0, .5);
+}
+.modal .modal-content {
+	display: inline-block;
+	margin-top: 5%;
+	padding: 1rem;
+	background-color: #fff;
+	position: relative;
+	z-index: 2;
+	width: 580px;
+	overflow-y: auto;
+}
+.modal-content .canvas-wrap {
+	overflow: hidden;
+	position: relative;
+	transition: max-height .05s ease;
+	min-height: 220px;
+	background-color: #f6f7f9;
+	border: 1px solid #ddd; 
+}
+.modal-content .canvas-wrap canvas {
+	display: block;
+	max-width: 100%;
+}
+
+.modal-content .canvas-toolbar {
+	position: relative;
+	z-index: 10;
+	margin-bottom: 10px;
+}
+
+.modal-content .modal-close {
+	margin: 1rem 0 0 0;
+	display: inline-block;
+	padding: .5rem 1rem;
+	border: 1px solid #ccc;
+	cursor: pointer;
+	background-color: #fff
+} 

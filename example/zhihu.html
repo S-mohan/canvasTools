@@ -3,30 +3,12 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
-	<link rel="stylesheet" href="https://smohan.net/static/mo.css">
+	<link rel="stylesheet" href="./demo.css">
 	<link rel="stylesheet" href="../dist/canvastools.css">
 	<style type="text/css">
-		html,body {
-			height: 100%;
-			overflow: hidden;
-		}
-		body {
-			background-color: #f0f0f0;
-			background: url(./zhihu.jpg) top center repeat-y;	
-		}
-		.project-name {
-			padding: 2rem 2rem 1rem 2rem;
-			text-align: center;
-			font-size: 3rem;
-			font-weight: bold;
-		}
-		.link-group {
-			text-align: center;
-			padding-bottom: 2rem
-		}
 		.screen-btn {
 			position: fixed;
-			z-index: 10000;
+			z-index: 50;
 			bottom: 40px;
 			right: 40px;
 			width: 60px;
@@ -42,79 +24,38 @@
 			font-size: 16px;
 			color: #f00;
 		}
-		.screen-modal, .screen-modal * {
-			box-sizing: border-box;
+		.bg {
+			width: 548px;
+			margin: 1rem auto;
 		}
-		.screen-modal {
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			z-index: 1990;
-			background-color: rgba(0, 0, 0, .6);
-			overflow: hidden;
-			text-align: center;
-		}
-		.screen-modal:before, .screen-modal .screen-modal__body {
-			display: inline-block;
-			vertical-align: middle;
-		}
-		.screen-modal:before {
-			content: '';
-			height: 100%;
-		}
-		.screen-modal .screen-modal__body {
-			background-color: #fff;
-			padding: 1.25rem;
-			width: 80%;
-			max-width: 37.5rem;
-			overflow: hidden;
-			text-align: left;
-		}
-		.screen-modal .screen-modal__title {
-			font-size: 1.25rem;
-			margin: 0;
-			padding: 0;
-		}
-		.screen-modal .screen-model__canvas {
+		.bg img {
 			width: 100%;
-			min-height: 20rem;
-			margin: 1rem 0;
-			position: relative;
-			background: url(./loading.gif) center no-repeat #f0f0f0;
-			overflow: hidden;
-			transition: max-height .3s ease,opacity .3s ease;
-		}
-		.screen-modal .screen-model__canvas canvas {
-			max-width: 100%;
-		}
-		.screen-canvas__actions {
-			min-height: 80px;
+			display: block;
 		}
 	</style>
 </head>
 <body>
 
-	<div style="background-color: rgba(255, 255, 255, .85); text-align: center;">
-		<h1 class="project-name">CanvasTools.js</h1>
+	<h1 class="project-name">CanvasTools.js</h1>
 		<div class="link-group">
-			<div class="mo-button-group">
-				<a href="./demo.html" class="mo-button">Demo1</a>
-				<a href="./zhihu.html" class="mo-button mo-button--positive">仿知乎截图反馈</a>
+			<div class="link-tab">
+				<a href="./demo.html">Demo1</a>
+				<a href="./zhihu.html" class="active">仿知乎截图反馈</a>
 			</div>
 		</div>
-		<p style="padding-bottom: 3rem">点击右下角截图按钮可截图</p>
-	</div>
+	<figure class="bg" id="screenshot">
+		<img src="./zhihu.jpg">
+	</figure>
 
-	<button class="screen-btn" id="modalShow" title="点击截图反馈">截图</button>
+	<button class="screen-btn" id="openModal" title="点击截图反馈">截图</button>
 
 
-	<div class="screen-modal" id="screenshotModal" style="display: none;">
-		<div class="screen-modal__body">
-			<h3 class="screen-modal__title">截图</h3>
-			<div class="screen-model__canvas"><canvas id="screenshotCanvas"></canvas></div>
-			<div class="screen-canvas__actions" id="canvasTools"></div>
+	<div class="modal" id="modal" style="display: none;">
+		<div class="overlap"></div>
+		<div class="modal-content">
+			<div class="canvas-toolbar" id="canvasToolBar"></div>
+			<figure class="canvas-wrap" id="canvasWrap"></figure>
+			<button class="modal-close" id="closeModal">关闭</button>
 		</div>
 	</div>
 

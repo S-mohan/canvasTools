@@ -662,7 +662,6 @@ var removeTextHelper = function removeTextHelper() {
 var getPos = function getPos(event, rect) {
 	var x = event.pageX - rect.left;
 	var y = event.pageY - rect.top;
-
 	if (x <= 0) x = 0;
 	if (x >= rect.width) x = rect.width;
 	if (y <= 0) y = 0;
@@ -893,8 +892,10 @@ function __bindEvents() {
 
 	_handles.resize = function (event) {
 		var _rect = canvas.getBoundingClientRect();
-		rect.width = canvas.offsetWidth;
-		rect.height = canvas.offsetHeight;
+		rect.width = canvas.width;
+		rect.height = canvas.height;
+		rect.offsetWidth = canvas.offsetWidth;
+		rect.offsetHeight = canvas.offsetHeight;
 		rect.top = _rect.top;
 		rect.left = _rect.left;
 		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event);
@@ -1118,8 +1119,13 @@ var CanvasTools = function () {
 		this.state.strokeColor = STROKE_DEFAULT_COLOR;
 		this.state.drawType = 'brush';
 		this.state.isEntry = false;
-		this.rect.width = canvas.offsetWidth;
-		this.rect.height = canvas.offsetHeight;
+
+		this.rect.width = canvas.width;
+		this.rect.height = canvas.height;
+
+		this.rect.offsetWidth = canvas.offsetWidth;
+		this.rect.offsetHeight = canvas.offsetHeight;
+
 		var rect = canvas.getBoundingClientRect();
 		this.rect.top = rect.top;
 		this.rect.left = rect.left;
@@ -1191,6 +1197,7 @@ var CanvasTools = function () {
 			this.canvas = null;
 			this.context = null;
 			this.history.length = 0;
+			this.config.container.removeChild(this.$el);
 		}
 	}]);
 
