@@ -61,7 +61,7 @@ const buildFontPanel = (fontSize = TEXT_HELPER_FONT_SIZE, color = STROKE_DEFAULT
 
 /**
  * 创建画笔 + 模糊度容器
- * @param  {Number stroke    [默认画笔]
+ * @param  {Number} stroke    [默认画笔]
  * @param  {Number} ambiguity [默认模糊度]
  * @return {HTMLElement}  
  */
