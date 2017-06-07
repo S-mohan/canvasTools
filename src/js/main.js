@@ -28,6 +28,8 @@ const TEXT_HELPER_FONT_SIZE = 12
 //字体
 const TEXT_FONT_FAMILY = '"Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif'
 
+//马赛克模糊度
+const AMBIGUITY_LEVEL = .7
 
 /**
  * 创建画笔+颜色容器
@@ -57,6 +59,14 @@ const buildFontPanel = (fontSize = TEXT_HELPER_FONT_SIZE, color = STROKE_DEFAULT
 	return el
 }
 
+
+const buildAmbiguityPanel = (stroke = STROKE_DEFAULT_COLOR, ambiguity = AMBIGUITY_LEVEL) => {
+	const el = document.createElement('div')
+	el.className = 'canvas-tools__panel js-panel__mosaic'
+	el.style.cssText += 'white-space: nowrap!important;'
+	el.innerHTML = Template.getStrokePanel(stroke) + Template.getAmbiguity(ambiguity)
+	return el
+}
 
 /**
  * 创建辅助文本输入框
@@ -185,7 +195,7 @@ const defaults = {
 	//工具条父级对象容器
 	container: document.body,
 	//显示按钮
-	buttons: ['rect', 'ellipse', 'brush', 'font', 'undo', 'save']
+	buttons: ['rect', 'ellipse', 'brush', 'font', 'mosaic', 'undo', 'save']
 }
 
 //创建一个下载链接
@@ -240,10 +250,12 @@ function __bindEvents() {
 	const $btns = utils.$('.js-btn', $el),
 		$fontPanel = utils.$('.js-panel__font', $el)[0],
 		$strokePanel = utils.$('.js-panel__stroke', $el)[0],
+		$mosaicPanel = utils.$('.js-panel__mosaic', $el)[0],
 		$colorSelected = utils.$('.js-color-selected', $el),
 		$colors = utils.$('.js-color', $el),
 		$strokeWidth = utils.$('.js-stroke-width', $el),
-		$fontSize = utils.$('.js-font-size', $el)
+		$fontSize = utils.$('.js-font-size', $el),
+		$mosaicAmbiguity = utils.$('.js-mosaic-ambiguity', $el)
 
 	//按钮事件
 	_handles.btnEmit = function(event) {
@@ -267,9 +279,15 @@ function __bindEvents() {
 			const visible = isActive ? 'block' : 'none'
 			if (panel === 'stroke') {
 				$fontPanel.style.display = 'none'
+				$mosaicPanel.style.display = 'none'
 				$strokePanel.style.display = visible
 			} else if (panel === 'font') {
 				$fontPanel.style.display = visible
+				$strokePanel.style.display = 'none'
+				$mosaicPanel.style.display = 'none'
+			} else if (panel === 'mosaic') {
+				$mosaicPanel.style.display = visible
+				$fontPanel.style.display = 'none'
 				$strokePanel.style.display = 'none'
 			}
 		} else {
@@ -336,6 +354,9 @@ function __bindEvents() {
 			case 'ellipse':
 				__drawEllipse.call(self, event, _startPos)
 				break
+			case 'mosaic':
+				__drawMoasic.call(self, event)
+				break
 			case 'brush':
 			default:
 				__drawBrush.call(self, event, _startPos)
@@ -356,6 +377,9 @@ function __bindEvents() {
 				break
 			case 'ellipse':
 				__drawEllipse.call(self, event, _startPos)
+				break
+			case 'mosaic':
+				__drawMoasic.call(self, event)
 				break
 			case 'brush':
 			default:
@@ -404,6 +428,11 @@ function __bindEvents() {
 		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event)
 	}
 
+	_handles.toggleAmbiguity = function(event) {
+		state.ambiguity = this.value
+		console.log(state)
+	}
+
 	//按钮事件
 	utils.$on($btns, 'click', _handles.btnEmit)
 
@@ -415,6 +444,8 @@ function __bindEvents() {
 
 	//切换字体大小
 	utils.$on($fontSize, 'change', _handles.toggleFontSize)
+
+	utils.$on($mosaicAmbiguity, 'change', _handles.toggleAmbiguity)
 
 	//矩形，椭圆，画笔等绘制
 	utils.$on(canvas, 'mousedown', _handles.onMouseDown)
@@ -561,6 +592,31 @@ function __drawFont(event) {
 
 
 /**
+ * 绘制马赛克
+ * @param  {MouseEvent} event [鼠标事件]
+ * @return {[type]} 
+ */
+function __drawMoasic(event) {
+	const {
+		context,
+		state,
+		rect
+	} = this
+	const pos = getPos(event, rect)
+
+	//获取当前位置1PX的颜色值
+	const pixel = context.getImageData(pos.x, pos.y, 1, 1).data
+	const color = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${state.ambiguity})`
+	const size = state.strokeWidth * 3.5 
+	context.beginPath()
+	context.save()
+	context.fillStyle = color
+	context.fillRect(pos.x, pos.y, size, size)
+	context.restore()
+}
+
+
+/**
  * 切换鼠标指针
  * @return 
  */
@@ -573,6 +629,9 @@ function __toggleCanvasCursor() {
 			break
 		case 'font':
 			cursor = 'font'
+			break
+		case 'mosaic':
+			cursor = 'mosaic'
 			break
 		case 'rect':
 		case 'ellipse':
@@ -623,6 +682,7 @@ class CanvasTools {
 		this.state.strokeWidth = STROKE_DEFAULT_WIDTH
 		this.state.fontSize = TEXT_HELPER_FONT_SIZE
 		this.state.strokeColor = STROKE_DEFAULT_COLOR
+		this.state.ambiguity = AMBIGUITY_LEVEL
 		this.state.drawType = 'brush'
 		this.state.isEntry = false
 
@@ -662,6 +722,7 @@ class CanvasTools {
 		this.$el = el
 		this.$el.appendChild(buildStrokePanel(S.strokeWidth, S.strokeColor))
 		this.$el.appendChild(buildFontPanel(S.fontSize, S.strokeColor))
+		this.$el.appendChild(buildAmbiguityPanel(S.ambiguity, S.strokeColor))
 		__bindEvents.call(this)
 	}
 
@@ -684,12 +745,14 @@ class CanvasTools {
 			$colors = utils.$('.js-color', $el),
 			$strokeWidth = utils.$('.js-stroke-width', $el),
 			$fontSize = utils.$('.js-font-size', $el),
+			$mosaicAmbiguity = utils.$('.js-mosaic-ambiguity', $el),
 			$textHelper = document.getElementById(TEXT_HELPER_ID)
 
 		utils.$off($btns, 'click', _handles.btnEmit)
 		utils.$off($colors, 'click', _handles.toggleColor)
 		utils.$off($strokeWidth, 'click', _handles.toggleStrokeWidth)
 		utils.$off($fontSize, 'change', _handles.toggleFontSize)
+		utils.$off($mosaicAmbiguity, 'change', _handles.toggleAmbiguity)
 		utils.$off(canvas, 'mousedown', _handles.onMouseDown)
 		utils.$off(canvas, 'click', _handles.insertTextHelper)
 		utils.$off(document, 'click', _handles.removeTextHelper)

@@ -256,11 +256,17 @@ var getFontPanel = function getFontPanel() {
 	return html;
 };
 
+var getAmbiguity = function getAmbiguity() {
+	var ambiguite = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : .5;
+	return '<label class="ambiguite-range"><span>\u6A21\u7CCA\u5EA6</span><input type="range" min="0" step="0.01" max="1" value="' + ambiguite + '" class="js-mosaic-ambiguity"></label>';
+};
+
 exports.default = {
 	getButtons: getButtons,
 	getColorPanel: getColorPanel,
 	getStrokePanel: getStrokePanel,
-	getFontPanel: getFontPanel
+	getFontPanel: getFontPanel,
+	getAmbiguity: getAmbiguity
 };
 module.exports = exports['default'];
 
@@ -522,6 +528,9 @@ var TEXT_HELPER_FONT_SIZE = 12;
 //字体
 var TEXT_FONT_FAMILY = '"Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Hiragino Sans GB W3","WenQuanYi Micro Hei",sans-serif';
 
+//马赛克模糊度
+var AMBIGUITY_LEVEL = .7;
+
 /**
  * 创建画笔+颜色容器
  * @param  {Number} stroke [默认画笔]
@@ -553,6 +562,17 @@ var buildFontPanel = function buildFontPanel() {
 	el.className = 'canvas-tools__panel js-panel__font';
 	el.style.cssText += 'white-space: nowrap!important;';
 	el.innerHTML = _template2.default.getFontPanel(fontSize) + _template2.default.getColorPanel(color);
+	return el;
+};
+
+var buildAmbiguityPanel = function buildAmbiguityPanel() {
+	var stroke = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : STROKE_DEFAULT_COLOR;
+	var ambiguity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : AMBIGUITY_LEVEL;
+
+	var el = document.createElement('div');
+	el.className = 'canvas-tools__panel js-panel__mosaic';
+	el.style.cssText += 'white-space: nowrap!important;';
+	el.innerHTML = _template2.default.getStrokePanel(stroke) + _template2.default.getAmbiguity(ambiguity);
 	return el;
 };
 
@@ -681,7 +701,7 @@ var defaults = {
 	//工具条父级对象容器
 	container: document.body,
 	//显示按钮
-	buttons: ['rect', 'ellipse', 'brush', 'font', 'undo', 'save']
+	buttons: ['rect', 'ellipse', 'brush', 'font', 'mosaic', 'undo', 'save']
 
 	//创建一个下载链接
 };var $saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a'
@@ -733,10 +753,12 @@ function __bindEvents() {
 	var $btns = _utils2.default.$('.js-btn', $el),
 	    $fontPanel = _utils2.default.$('.js-panel__font', $el)[0],
 	    $strokePanel = _utils2.default.$('.js-panel__stroke', $el)[0],
+	    $mosaicPanel = _utils2.default.$('.js-panel__mosaic', $el)[0],
 	    $colorSelected = _utils2.default.$('.js-color-selected', $el),
 	    $colors = _utils2.default.$('.js-color', $el),
 	    $strokeWidth = _utils2.default.$('.js-stroke-width', $el),
-	    $fontSize = _utils2.default.$('.js-font-size', $el
+	    $fontSize = _utils2.default.$('.js-font-size', $el),
+	    $mosaicAmbiguity = _utils2.default.$('.js-mosaic-ambiguity', $el
 
 	//按钮事件
 	);_handles.btnEmit = function (event) {
@@ -762,9 +784,15 @@ function __bindEvents() {
 			var visible = isActive ? 'block' : 'none';
 			if (panel === 'stroke') {
 				$fontPanel.style.display = 'none';
+				$mosaicPanel.style.display = 'none';
 				$strokePanel.style.display = visible;
 			} else if (panel === 'font') {
 				$fontPanel.style.display = visible;
+				$strokePanel.style.display = 'none';
+				$mosaicPanel.style.display = 'none';
+			} else if (panel === 'mosaic') {
+				$mosaicPanel.style.display = visible;
+				$fontPanel.style.display = 'none';
 				$strokePanel.style.display = 'none';
 			}
 		} else {
@@ -833,6 +861,9 @@ function __bindEvents() {
 			case 'ellipse':
 				__drawEllipse.call(self, event, _startPos);
 				break;
+			case 'mosaic':
+				__drawMoasic.call(self, event);
+				break;
 			case 'brush':
 			default:
 				__drawBrush.call(self, event, _startPos);
@@ -853,6 +884,9 @@ function __bindEvents() {
 				break;
 			case 'ellipse':
 				__drawEllipse.call(self, event, _startPos);
+				break;
+			case 'mosaic':
+				__drawMoasic.call(self, event);
 				break;
 			case 'brush':
 			default:
@@ -901,6 +935,11 @@ function __bindEvents() {
 		state.drawType === 'font' && state.isEntry && __drawFont.call(self, event);
 	};
 
+	_handles.toggleAmbiguity = function (event) {
+		state.ambiguity = this.value;
+		console.log(state);
+	};
+
 	//按钮事件
 	_utils2.default.$on($btns, 'click', _handles.btnEmit
 
@@ -911,7 +950,9 @@ function __bindEvents() {
 	);_utils2.default.$on($strokeWidth, 'click', _handles.toggleStrokeWidth
 
 	//切换字体大小
-	);_utils2.default.$on($fontSize, 'change', _handles.toggleFontSize
+	);_utils2.default.$on($fontSize, 'change', _handles.toggleFontSize);
+
+	_utils2.default.$on($mosaicAmbiguity, 'change', _handles.toggleAmbiguity
 
 	//矩形，椭圆，画笔等绘制
 	);_utils2.default.$on(canvas, 'mousedown', _handles.onMouseDown
@@ -1053,6 +1094,29 @@ function __drawFont(event) {
 }
 
 /**
+ * 绘制马赛克
+ * @param  {MouseEvent} event [鼠标事件]
+ * @return {[type]} 
+ */
+function __drawMoasic(event) {
+	var context = this.context,
+	    state = this.state,
+	    rect = this.rect;
+
+	var pos = getPos(event, rect
+
+	//获取当前位置1PX的颜色值
+	);var pixel = context.getImageData(pos.x, pos.y, 1, 1).data;
+	var color = 'rgba(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ', ' + state.ambiguity + ')';
+	var size = state.strokeWidth * 3.5;
+	context.beginPath();
+	context.save();
+	context.fillStyle = color;
+	context.fillRect(pos.x, pos.y, size, size);
+	context.restore();
+}
+
+/**
  * 切换鼠标指针
  * @return 
  */
@@ -1065,6 +1129,9 @@ function __toggleCanvasCursor() {
 			break;
 		case 'font':
 			cursor = 'font';
+			break;
+		case 'mosaic':
+			cursor = 'mosaic';
 			break;
 		case 'rect':
 		case 'ellipse':
@@ -1117,6 +1184,7 @@ var CanvasTools = function () {
 		this.state.strokeWidth = STROKE_DEFAULT_WIDTH;
 		this.state.fontSize = TEXT_HELPER_FONT_SIZE;
 		this.state.strokeColor = STROKE_DEFAULT_COLOR;
+		this.state.ambiguity = AMBIGUITY_LEVEL;
 		this.state.drawType = 'brush';
 		this.state.isEntry = false;
 
@@ -1160,6 +1228,7 @@ var CanvasTools = function () {
 			this.$el = el;
 			this.$el.appendChild(buildStrokePanel(S.strokeWidth, S.strokeColor));
 			this.$el.appendChild(buildFontPanel(S.fontSize, S.strokeColor));
+			this.$el.appendChild(buildAmbiguityPanel(S.ambiguity, S.strokeColor));
 			__bindEvents.call(this);
 		}
 	}, {
@@ -1183,12 +1252,14 @@ var CanvasTools = function () {
 			    $colors = _utils2.default.$('.js-color', $el),
 			    $strokeWidth = _utils2.default.$('.js-stroke-width', $el),
 			    $fontSize = _utils2.default.$('.js-font-size', $el),
+			    $mosaicAmbiguity = _utils2.default.$('.js-mosaic-ambiguity', $el),
 			    $textHelper = document.getElementById(TEXT_HELPER_ID);
 
 			_utils2.default.$off($btns, 'click', _handles.btnEmit);
 			_utils2.default.$off($colors, 'click', _handles.toggleColor);
 			_utils2.default.$off($strokeWidth, 'click', _handles.toggleStrokeWidth);
 			_utils2.default.$off($fontSize, 'change', _handles.toggleFontSize);
+			_utils2.default.$off($mosaicAmbiguity, 'change', _handles.toggleAmbiguity);
 			_utils2.default.$off(canvas, 'mousedown', _handles.onMouseDown);
 			_utils2.default.$off(canvas, 'click', _handles.insertTextHelper);
 			_utils2.default.$off(document, 'click', _handles.removeTextHelper);
