@@ -256,6 +256,11 @@ var getFontPanel = function getFontPanel() {
 	return html;
 };
 
+/**
+ * 获取模糊度模版
+ * @param  {Number} ambiguite [默认模糊度 0 - 1]
+ * @return {String}  
+ */
 var getAmbiguity = function getAmbiguity() {
 	var ambiguite = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : .5;
 	return '<label class="ambiguite-range"><span>\u6A21\u7CCA\u5EA6</span><input type="range" min="0" step="0.01" max="1" value="' + ambiguite + '" class="js-mosaic-ambiguity"></label>';
@@ -565,6 +570,12 @@ var buildFontPanel = function buildFontPanel() {
 	return el;
 };
 
+/**
+ * 创建画笔 + 模糊度容器
+ * @param  {Number stroke    [默认画笔]
+ * @param  {Number} ambiguity [默认模糊度]
+ * @return {HTMLElement}  
+ */
 var buildAmbiguityPanel = function buildAmbiguityPanel() {
 	var stroke = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : STROKE_DEFAULT_COLOR;
 	var ambiguity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : AMBIGUITY_LEVEL;
@@ -1228,7 +1239,7 @@ var CanvasTools = function () {
 			this.$el = el;
 			this.$el.appendChild(buildStrokePanel(S.strokeWidth, S.strokeColor));
 			this.$el.appendChild(buildFontPanel(S.fontSize, S.strokeColor));
-			this.$el.appendChild(buildAmbiguityPanel(S.ambiguity, S.strokeColor));
+			this.$el.appendChild(buildAmbiguityPanel(S.strokeWidth, S.ambiguity));
 			__bindEvents.call(this);
 		}
 	}, {

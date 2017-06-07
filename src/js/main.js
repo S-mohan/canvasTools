@@ -59,7 +59,12 @@ const buildFontPanel = (fontSize = TEXT_HELPER_FONT_SIZE, color = STROKE_DEFAULT
 	return el
 }
 
-
+/**
+ * 创建画笔 + 模糊度容器
+ * @param  {Number stroke    [默认画笔]
+ * @param  {Number} ambiguity [默认模糊度]
+ * @return {HTMLElement}  
+ */
 const buildAmbiguityPanel = (stroke = STROKE_DEFAULT_COLOR, ambiguity = AMBIGUITY_LEVEL) => {
 	const el = document.createElement('div')
 	el.className = 'canvas-tools__panel js-panel__mosaic'
@@ -607,7 +612,7 @@ function __drawMoasic(event) {
 	//获取当前位置1PX的颜色值
 	const pixel = context.getImageData(pos.x, pos.y, 1, 1).data
 	const color = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${state.ambiguity})`
-	const size = state.strokeWidth * 3.5 
+	const size = state.strokeWidth * 3.5
 	context.beginPath()
 	context.save()
 	context.fillStyle = color
@@ -722,7 +727,7 @@ class CanvasTools {
 		this.$el = el
 		this.$el.appendChild(buildStrokePanel(S.strokeWidth, S.strokeColor))
 		this.$el.appendChild(buildFontPanel(S.fontSize, S.strokeColor))
-		this.$el.appendChild(buildAmbiguityPanel(S.ambiguity, S.strokeColor))
+		this.$el.appendChild(buildAmbiguityPanel(S.strokeWidth, S.ambiguity))
 		__bindEvents.call(this)
 	}
 
