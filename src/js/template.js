@@ -134,6 +134,11 @@ const getFontPanel = (fontSize = 12) => {
 }
 
 
+/**
+ * 获取模糊度模版
+ * @param  {Number} ambiguite [默认模糊度 0 - 1]
+ * @return {String}  
+ */
 const getAmbiguity = (ambiguite = .5) => `<label class="ambiguite-range"><span>模糊度</span><input type="range" min="0" step="0.01" max="1" value="${ambiguite}" class="js-mosaic-ambiguity"></label>`
 
 export default {
