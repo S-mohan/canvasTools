@@ -30,8 +30,14 @@ Screenshot tool based on canvas
 
 #### 1.使用NPM
 
-- npm install
-- npm run build
+```javascript
+npm install
+//dev 
+npm run dev
+//build
+npm run build 
+```
+
 
 #### 2.直接使用
 

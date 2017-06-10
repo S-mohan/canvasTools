@@ -15,6 +15,7 @@ body {
 	color: #515151;
 	white-space: normal;
 	background-color: #f0f0f0;
+	user-select: none;
 }
 .link-tab {
 	display: inline-block;
