@@ -518,6 +518,7 @@ function __drawEllipse(event, start) {
 	context.stroke()
 }
 
+
 /**
  * 画笔工具自由绘制
  * @param  {MouseEvent} event [鼠标事件]
@@ -608,11 +609,25 @@ function __drawMoasic(event) {
 		rect
 	} = this
 	const pos = getPos(event, rect)
+	const size = state.strokeWidth * 3
 
 	//获取当前位置1PX的颜色值
-	const pixel = context.getImageData(pos.x, pos.y, 1, 1).data
-	const color = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${state.ambiguity})`
-	const size = state.strokeWidth * 3.5
+	const data = context.getImageData(pos.x, pos.y, size, size).data
+
+	let r = 0, g = 0, b = 0
+	
+	for (let row = 0; row < size; row ++) {
+		for (let col = 0; col < size; col++) {
+			 r += data[((size * row) + col) * 4]
+       g += data[((size * row) + col) * 4 + 1]
+       b += data[((size * row) + col) * 4 + 2]
+		}
+	}
+
+	r = Math.round(r / (size * size))
+	g = Math.round(g / (size * size))
+	b = Math.round(b / (size * size))
+	const color = `rgba(${r}, ${g}, ${b}, ${state.ambiguity})`
 	context.beginPath()
 	context.save()
 	context.fillStyle = color

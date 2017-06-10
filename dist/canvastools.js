@@ -572,7 +572,7 @@ var buildFontPanel = function buildFontPanel() {
 
 /**
  * 创建画笔 + 模糊度容器
- * @param  {Number stroke    [默认画笔]
+ * @param  {Number} stroke    [默认画笔]
  * @param  {Number} ambiguity [默认模糊度]
  * @return {HTMLElement}  
  */
@@ -1114,12 +1114,28 @@ function __drawMoasic(event) {
 	    state = this.state,
 	    rect = this.rect;
 
-	var pos = getPos(event, rect
+	var pos = getPos(event, rect);
+	var size = state.strokeWidth * 3;
 
 	//获取当前位置1PX的颜色值
-	);var pixel = context.getImageData(pos.x, pos.y, 1, 1).data;
-	var color = 'rgba(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ', ' + state.ambiguity + ')';
-	var size = state.strokeWidth * 3.5;
+	var data = context.getImageData(pos.x, pos.y, size, size).data;
+
+	var r = 0,
+	    g = 0,
+	    b = 0;
+
+	for (var row = 0; row < size; row++) {
+		for (var col = 0; col < size; col++) {
+			r += data[(size * row + col) * 4];
+			g += data[(size * row + col) * 4 + 1];
+			b += data[(size * row + col) * 4 + 2];
+		}
+	}
+
+	r = Math.round(r / (size * size));
+	g = Math.round(g / (size * size));
+	b = Math.round(b / (size * size));
+	var color = 'rgba(' + r + ', ' + g + ', ' + b + ', ' + state.ambiguity + ')';
 	context.beginPath();
 	context.save();
 	context.fillStyle = color;
